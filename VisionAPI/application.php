@@ -6,17 +6,25 @@ class Application
     public function ObjectDetection()
     {
         
-        /*
+
         $vision = new VisionClient(['keyFile' => json_decode(file_get_contents("key.json"),true)]);
         $dog = fopen("dog.jpg",'r');
         $img = $vision->image($dog,['OBJECT_LOCALIZATION']);
         $objects = $vision->annotate($img);
         $info = $objects->info();
         $objectsDetail = $info['localizedObjectAnnotations'];
-        $this->PrintObject($objectsDetail);
-        echo "Tespit Edilen Nesne Sayısı: ".$this->GetCount($objectsDetail);
-        */
-        
+        //$this->PrintObject($objectsDetail);
+        $AllCords = $this->AllCords($objectsDetail);
+
+        foreach ($AllCords as $cord){
+            //TODO: Kodları al ve en küçüklerini bul....
+            echo "<br>";
+        }
+
+       // echo "Tespit Edilen Nesne Sayısı: ".$this->GetCount($objectsDetail);
+
+        /*
+         *
         $image_info = getimagesize("dog.jpg");
         $W  = $image_info[0];
         $H  = $image_info[1];
@@ -28,47 +36,106 @@ class Application
         $Y2 = $H *0.22967617;
         $Y3 = $H *0.7350759;
         $Y4 = $H *0.7350759;
-                      
+        $cords = array(
+            "0" =>  array(
+                "x"=> $X1,
+                "y"=> $Y1,
+            ),
+            "1" =>  array(
+                "x"=> $X2,
+                "y"=> $Y2,
+            ),
+            "2" =>  array(
+                "x"=> $X3,
+                "y"=> $Y3,
+            ),
+            "3" =>  array(
+                "x"=> $X4,
+                "y"=> $Y4,
+            )
+        );
 
-        echo "Tespit Edilen Nesne Sayısı: 1<br>";
-        echo "İsim: Bicycle<br>";
-        echo "X1: ".$X1."<br>";
-        echo "Y1: ".$Y1."<br>";
-        echo "X2: ".$X2."<br>";
-        echo "Y2: ".$Y2."<br>";
-        echo "X3: ".$X3."<br>";
-        echo "Y3: ".$Y3."<br>";
-        echo "X4: ".$X4."<br>";
-        echo "Y4: ".$Y4."<br>";
+        $this->ImageDraw("dog.jpg",$this->MaxMinCords($cords));
+         */
 
-        /*
-        {
-            title: XXXXXXX
-            url: XXXXXX
-            objectSize: XXXX
-
-        }
-        */
 }
 
-    public function GetCount(Array $objectsDetail = null)
+    private function GetCount(Array $objectsDetail = null)
     {
         return count($objectsDetail);
     }
-    public function PrintObject(Array $objectsDetail)
-    {
-        $objectLenght =  $this->GetCount($objectsDetail);
-        for($i = 0; $i<$objectLenght;$i++){
-            echo "İsim: ". $objectsDetail[$i]["name"]."<br>";
-            echo "X1: ". $objectsDetail[$i]["boundingPoly"]["normalizedVertices"][0]["x"]."<br>";
-            echo "Y1: ". $objectsDetail[$i]["boundingPoly"]["normalizedVertices"][0]["y"]."<br>";
-            echo "X2: ". $objectsDetail[$i]["boundingPoly"]["normalizedVertices"][1]["x"]."<br>";
-            echo "Y2: ". $objectsDetail[$i]["boundingPoly"]["normalizedVertices"][1]["y"]."<br>";
-            echo "X3: ". $objectsDetail[$i]["boundingPoly"]["normalizedVertices"][2]["x"]."<br>";
-            echo "Y3: ". $objectsDetail[$i]["boundingPoly"]["normalizedVertices"][2]["y"]."<br>";
-            echo "X4: ". $objectsDetail[$i]["boundingPoly"]["normalizedVertices"][3]["x"]."<br>";
-            echo "Y4: ". $objectsDetail[$i]["boundingPoly"]["normalizedVertices"][3]["y"]."<br>";
-            echo "##############################################################################<br>";
+    private function AllCords($objectsDetails){
+
+        $allCords = Array();
+       foreach ($objectsDetails as $detail){
+           array_push($allCords,array(
+               "X"  => array(
+                   "0" => $detail['boundingPoly']["normalizedVertices"][0]["x"],
+                   "1" => $detail['boundingPoly']["normalizedVertices"][1]["x"],
+                   "2" => $detail['boundingPoly']["normalizedVertices"][2]["x"],
+                   "3" => $detail['boundingPoly']["normalizedVertices"][3]["x"],
+               ),
+               "Y"  => array(
+                   "0" => $detail['boundingPoly']["normalizedVertices"][0]["y"],
+                   "1" => $detail['boundingPoly']["normalizedVertices"][1]["y"],
+                   "2" => $detail['boundingPoly']["normalizedVertices"][2]["y"],
+                   "3" => $detail['boundingPoly']["normalizedVertices"][3]["y"],
+               ),
+
+           ));
        }
+       return $allCords;
     }
+    private function PrintObject(Array $objectsDetails)
+    {
+        foreach ($objectsDetails as $detail){
+           echo $detail['boundingPoly']["normalizedVertices"][0]["x"]."</br>";
+           echo $detail['boundingPoly']["normalizedVertices"][0]["y"]."</br>";
+           echo $detail['boundingPoly']["normalizedVertices"][1]["x"]."</br>";
+           echo $detail['boundingPoly']["normalizedVertices"][1]["y"]."</br>";
+           echo $detail['boundingPoly']["normalizedVertices"][2]["x"]."</br>";
+           echo $detail['boundingPoly']["normalizedVertices"][2]["y"]."</br>";
+           echo $detail['boundingPoly']["normalizedVertices"][3]["x"]."</br>";
+           echo $detail['boundingPoly']["normalizedVertices"][3]["y"]."</br>";
+            echo "#################################</br>";
+        }
+    }
+
+    private function ImageDraw($path = "",Array $cords)
+    {
+        var_dump($cords,$path);
+        /*
+        $image_info = getimagesize("dog.jpg");
+        $W  = $image_info[0];
+        $H  = $image_info[1];
+
+        $clouds = imagecreatefromjpeg('dog.jpg');
+        $randColor   = imagecolorallocate($clouds, rand(0,255), rand(0,255), rand(0,255));
+        imagerectangle($clouds, 122.0805888, 132.29347392, 567.24192768, 423.4037184, $randColor);
+        imagepng($clouds,"file.png");
+        imagedestroy($clouds);
+        */
+       
+    }
+
+
+    private  function MinSearch(Array $cords){
+        $min = 99999999999999;
+        for($i = 0; $i < count($cords);$i++){
+            if($cords[$i] < $min)
+                $min = $cords[$i];
+        }
+        return $min;
+    }
+    private  function MaxSearch(Array $cords){
+
+        $max = -1;
+        for($i = 0; $i < count($cords);$i++){
+            if($cords[$i] > $max)
+                $max = $cords[$i];
+        }
+        return $max;
+    }
+
 }
+
