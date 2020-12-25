@@ -3,66 +3,71 @@ require 'vendor/autoload.php';
 use Google\Cloud\Vision\VisionClient;
 class Application 
 {
+
+    private $NewImagePath = "";
+    private $BaseUrl = "http://localhost/ObjectDetection/VisionAPI/";
+    private $ImagePath = "normalImages/images5.jpg";
+
+
     public function ObjectDetection()
     {
         
 
         $vision = new VisionClient(['keyFile' => json_decode(file_get_contents("key.json"),true)]);
-        $dog = fopen("dog.jpg",'r');
+        $dog = fopen($this->ImagePath,'r');
         $img = $vision->image($dog,['OBJECT_LOCALIZATION']);
         $objects = $vision->annotate($img);
         $info = $objects->info();
         $objectsDetail = $info['localizedObjectAnnotations'];
-        //$this->PrintObject($objectsDetail);
         $AllCords = $this->AllCords($objectsDetail);
-
-        foreach ($AllCords as $cord){
-            //TODO: Kodları al ve en küçüklerini bul....
-            echo "<br>";
+        $drawObjectsCords = array();
+        $objectName = array();
+        foreach ($AllCords as $objectCords){
+            array_push($drawObjectsCords,$this->MaxMinCords($objectCords));
         }
+        $colorAndTitle = $this->ImageTitlePush($this->ImageDraw($this->ImagePath,$drawObjectsCords),$this->ObjectNameDetected($objectsDetail));
 
-       // echo "Tespit Edilen Nesne Sayısı: ".$this->GetCount($objectsDetail);
+        $result = Array();
+        array_push($result,Array(
+            "path"  => $this->BaseUrl.$this->NewImagePath,
+            "detail" => $colorAndTitle
+        ));
+        $json = json_encode($result);
+        return $json;
 
-        /*
-         *
-        $image_info = getimagesize("dog.jpg");
-        $W  = $image_info[0];
-        $H  = $image_info[1];
-        $X1 = $W * 0.1589591;
-        $X2 =$W *0.73859626;
-        $X3 =$W *0.73859626;
-        $X4 =$W *0.1589591;
-        $Y1 = $H *0.22967617;
-        $Y2 = $H *0.22967617;
-        $Y3 = $H *0.7350759;
-        $Y4 = $H *0.7350759;
-        $cords = array(
-            "0" =>  array(
-                "x"=> $X1,
-                "y"=> $Y1,
-            ),
-            "1" =>  array(
-                "x"=> $X2,
-                "y"=> $Y2,
-            ),
-            "2" =>  array(
-                "x"=> $X3,
-                "y"=> $Y3,
-            ),
-            "3" =>  array(
-                "x"=> $X4,
-                "y"=> $Y4,
-            )
-        );
 
-        $this->ImageDraw("dog.jpg",$this->MaxMinCords($cords));
-         */
 
 }
+    private function ImageTitlePush($ImageResult,$ObjectDetectedNames){
+        $AllData = Array();
+        for($i = 0; $i< count($ObjectDetectedNames);$i++){
+            array_push($AllData,array(
+                "title" => $ObjectDetectedNames[$i],
+                "red"   => $ImageResult["colorPalete"][$i]["red"],
+                "green"   => $ImageResult["colorPalete"][$i]["green"],
+                "blue"   => $ImageResult["colorPalete"][$i]["blue"],
+            ));
+        }
+        return $AllData;
+    }
+    private function ObjectNameDetected(Array $objectsDetails)
+   {
+       $objectsName = Array();
+       foreach ($objectsDetails as $detail){
+           array_push($objectsName,$detail['name']);
+       }
 
-    private function GetCount(Array $objectsDetail = null)
-    {
-        return count($objectsDetail);
+       return $objectsName;
+   }
+    private function MaxMinCords(Array $cords){
+        $drawCords = array(
+            "minX" => $this->MinSearch($cords['X']),
+            "minY" => $this->MinSearch($cords['Y']),
+            "maxX" => $this->MaxSearch($cords['X']),
+            "maxY" => $this->MaxSearch($cords['Y']),
+
+        );
+        return $drawCords;
     }
     private function AllCords($objectsDetails){
 
@@ -100,25 +105,48 @@ class Application
             echo "#################################</br>";
         }
     }
-
     private function ImageDraw($path = "",Array $cords)
     {
-        var_dump($cords,$path);
-        /*
-        $image_info = getimagesize("dog.jpg");
+
+
+        $image_info = getimagesize($this->ImagePath);
         $W  = $image_info[0];
         $H  = $image_info[1];
+        $clouds = imagecreatefromjpeg($this->ImagePath);
+        imagesetthickness($clouds, 3); //Kalem kalınlığı
 
-        $clouds = imagecreatefromjpeg('dog.jpg');
-        $randColor   = imagecolorallocate($clouds, rand(0,255), rand(0,255), rand(0,255));
-        imagerectangle($clouds, 122.0805888, 132.29347392, 567.24192768, 423.4037184, $randColor);
-        imagepng($clouds,"file.png");
+        $colorPalete = array();
+        foreach ($cords as $key=> $cord){
+            $cord["minX"] =$cord["minX"] * $W;
+            $cord["minY"] =$cord["minY"] * $H;
+            $cord["maxX"] =$cord["maxX"] * $W;
+            $cord["maxY"] =$cord["maxY"] * $H;
+            $Red    = rand(0,255);
+            $Green  = rand(0,255);
+            $Blue   = rand(0,255);
+            $randColor   = imagecolorallocate($clouds, $Red , $Green, $Blue);
+            imagerectangle($clouds,  $cord["minX"],  $cord["minY"], $cord["maxX"], $cord["maxY"], $randColor);
+            imagestring($clouds, 5, ($cord["minX"] + $cord["maxX"]) / 2, $cord["minY"], $key , $randColor);
+            array_push($colorPalete,Array(
+                "red"   => $Red,
+                "green" => $Green,
+                "blue"  => $Blue
+            ));
+        }
+        $uniqName = uniqid();
+        $imagePath = "detectedImages/".$uniqName.".png";
+        imagepng($clouds,$imagePath);
         imagedestroy($clouds);
-        */
-       
+
+        $result = array(
+            "colorPalete"   => $colorPalete
+        );
+
+       $this->NewImagePath = $imagePath;
+       return $result;
+
+
     }
-
-
     private  function MinSearch(Array $cords){
         $min = 99999999999999;
         for($i = 0; $i < count($cords);$i++){
@@ -138,4 +166,6 @@ class Application
     }
 
 }
+
+
 
