@@ -86,7 +86,7 @@ const Exam = () => {
     });
     body.append("Content-Type", "image/jpg");
 
-    fetch("http://demo.enginyenice.com/index.php", {
+    fetch("http://yazlab.enginyenice.com/index.php", {
       method: "POST",
       headers: {
         "Content-Type": "multipart/form-data",

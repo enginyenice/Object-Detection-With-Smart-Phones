@@ -1,33 +1,24 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => 'c10c4234f89b318be51ccf5852dc0785d82ef0af',
     'name' => '__root__',
   ),
   'versions' => 
   array (
     '__root__' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
-    ),
-    'brick/math' => 
-    array (
-      'pretty_version' => '0.9.1',
-      'version' => '0.9.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '283a40c901101e66de7061bd359252c013dcc43c',
+      'reference' => 'c10c4234f89b318be51ccf5852dc0785d82ef0af',
     ),
     'firebase/php-jwt' => 
     array (
@@ -38,20 +29,6 @@
       ),
       'reference' => 'feb0e820b8436873675fd3aca04f3728eb2185cb',
     ),
-    'google/analytics-admin' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.1.0',
-      ),
-    ),
-    'google/analytics-data' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.1.0',
-      ),
-    ),
     'google/auth' => 
     array (
       'pretty_version' => 'v1.14.3',
@@ -61,392 +38,23 @@
       ),
       'reference' => 'c1503299c779af0cbc99b43788f75930988852cf',
     ),
-    'google/cloud' => 
+    'google/cloud-core' => 
     array (
-      'pretty_version' => 'v0.147.0',
-      'version' => '0.147.0.0',
+      'pretty_version' => 'v1.40.0',
+      'version' => '1.40.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ee54bb5c81529c032b2f71203534784ec019f901',
-    ),
-    'google/cloud-asset' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.3.0',
-      ),
-    ),
-    'google/cloud-assured-workloads' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.1.1',
-      ),
-    ),
-    'google/cloud-automl' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.3.2',
-      ),
-    ),
-    'google/cloud-bigquery' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.20.1',
-      ),
-    ),
-    'google/cloud-bigquery-connection' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.3.2',
-      ),
-    ),
-    'google/cloud-bigquery-reservation' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.2.2',
-      ),
-    ),
-    'google/cloud-bigquery-storage' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.0.2',
-      ),
-    ),
-    'google/cloud-bigquerydatatransfer' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.2.2',
-      ),
-    ),
-    'google/cloud-bigtable' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.7.1',
-      ),
-    ),
-    'google/cloud-billing' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.2.2',
-      ),
-    ),
-    'google/cloud-common-protos' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.2.1',
-      ),
-    ),
-    'google/cloud-container' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.2.1',
-      ),
-    ),
-    'google/cloud-core' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.40.0',
-      ),
-    ),
-    'google/cloud-data-catalog' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.0.2',
-      ),
-    ),
-    'google/cloud-dataproc' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.3.2',
-      ),
-    ),
-    'google/cloud-datastore' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.12.2',
-      ),
-    ),
-    'google/cloud-datastore-admin' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.1.1',
-      ),
-    ),
-    'google/cloud-debugger' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.3.3',
-      ),
-    ),
-    'google/cloud-dialogflow' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.17.4',
-      ),
-    ),
-    'google/cloud-dlp' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.1.1',
-      ),
-    ),
-    'google/cloud-error-reporting' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.18.2',
-      ),
-    ),
-    'google/cloud-firestore' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.19.0',
-      ),
-    ),
-    'google/cloud-game-servers' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.2.1',
-      ),
-    ),
-    'google/cloud-iot' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.3.2',
-      ),
-    ),
-    'google/cloud-kms' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.11.2',
-      ),
-    ),
-    'google/cloud-language' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.24.4',
-      ),
-    ),
-    'google/cloud-logging' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.21.0',
-      ),
-    ),
-    'google/cloud-memcache' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.3.2',
-      ),
-    ),
-    'google/cloud-monitoring' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.0.1',
-      ),
-    ),
-    'google/cloud-osconfig' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.1.1',
-      ),
-    ),
-    'google/cloud-oslogin' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.2.2',
-      ),
-    ),
-    'google/cloud-pubsub' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.29.3',
-      ),
-    ),
-    'google/cloud-recaptcha-enterprise' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.0.2',
-      ),
-    ),
-    'google/cloud-recommendations-ai' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.2.3',
-      ),
-    ),
-    'google/cloud-recommender' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.2.2',
-      ),
-    ),
-    'google/cloud-redis' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.2.2',
-      ),
-    ),
-    'google/cloud-scheduler' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.5.2',
-      ),
-    ),
-    'google/cloud-secret-manager' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.2.1',
-      ),
-    ),
-    'google/cloud-security-center' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.0.3',
-      ),
-    ),
-    'google/cloud-security-private-ca' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.1.0',
-      ),
-    ),
-    'google/cloud-service-directory' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.3.2',
-      ),
-    ),
-    'google/cloud-spanner' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.32.2',
-      ),
-    ),
-    'google/cloud-speech' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.3.2',
-      ),
-    ),
-    'google/cloud-storage' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.23.0',
-      ),
-    ),
-    'google/cloud-talent' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.15.1',
-      ),
-    ),
-    'google/cloud-tasks' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.8.2',
-      ),
-    ),
-    'google/cloud-text-to-speech' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.2.2',
-      ),
-    ),
-    'google/cloud-trace' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.3.2',
-      ),
-    ),
-    'google/cloud-translate' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.9.1',
-      ),
-    ),
-    'google/cloud-videointelligence' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.11.2',
-      ),
+      'reference' => '1f45457d796c3807bc4b19c3d7b7e89a2f59d63c',
     ),
     'google/cloud-vision' => 
     array (
-      'replaced' => 
+      'pretty_version' => 'v1.2.2',
+      'version' => '1.2.2.0',
+      'aliases' => 
       array (
-        0 => '1.2.2',
       ),
-    ),
-    'google/cloud-web-risk' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '1.0.2',
-      ),
-    ),
-    'google/cloud-web-security-scanner' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.6.3',
-      ),
-    ),
-    'google/cloud-workflows' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '0.1.0',
-      ),
+      'reference' => '3f1038172b492283698454e2a241191592b247cd',
     ),
     'google/common-protos' => 
     array (
@@ -456,15 +64,6 @@
       array (
       ),
       'reference' => '535f489ff1c3433c0ea64cd5aa0560f926949ac5',
-    ),
-    'google/crc32' => 
-    array (
-      'pretty_version' => 'v0.1.0',
-      'version' => '0.1.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a8525f0dea6fca1893e1bae2f6e804c5f7d007fb',
     ),
     'google/gax' => 
     array (
@@ -604,31 +203,6 @@
       ),
       'reference' => '120b605dfeb996808c31b6477290a714d356e822',
     ),
-    'ramsey/collection' => 
-    array (
-      'pretty_version' => '1.1.1',
-      'version' => '1.1.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '24d93aefb2cd786b7edd9f45b554aea20b28b9b1',
-    ),
-    'ramsey/uuid' => 
-    array (
-      'pretty_version' => '4.1.1',
-      'version' => '4.1.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'cd4032040a750077205918c86049aa0f43d22947',
-    ),
-    'rhumsaa/uuid' => 
-    array (
-      'replaced' => 
-      array (
-        0 => '4.1.1',
-      ),
-    ),
     'rize/uri-template' => 
     array (
       'pretty_version' => '0.3.2',
@@ -637,15 +211,6 @@
       array (
       ),
       'reference' => '9e5fdd5c47147aa5adf7f760002ee591ed37b9ca',
-    ),
-    'symfony/polyfill-ctype' => 
-    array (
-      'pretty_version' => 'v1.20.0',
-      'version' => '1.20.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'f4ba089a5b6366e453971d3aad5fe8e897b37f41',
     ),
   ),
 );
