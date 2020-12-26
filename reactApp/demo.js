@@ -4,11 +4,12 @@ import {
   StyleSheet,
   Image,
   Text,
+  ScrollView,
   View,
   Platform,
-  addons,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import { render } from "react-dom";
 
 
 
@@ -26,11 +27,8 @@ let  responseData;
 export default function ImagePickerExample() {
   const [image, setImage] = useState(null);
   const [resultImage, setResultImage] = useState(null);
-  state = {
-    
-    details: [],
-    path: ""
-}
+  const [resultDetais, setResultDetais] = useState(null);
+
 
   useEffect(() => {
     (async () => {
@@ -90,9 +88,10 @@ export default function ImagePickerExample() {
       .then((res) => res.json())
       .then((res) => { 
         //this.setState({path: res[0]["path"], details: res[0]["detail"]});
-       console.log(res[0]["path"])
-       console.log(res[0]["detail"])
+  //     console.log(res[0]["path"])
+//       console.log(res[0]["detail"])
        setResultImage(res[0]["path"])
+       setResultDetais(res[0]["detail"])
 
       })
       .catch((e) => console.log(e))
@@ -101,9 +100,22 @@ export default function ImagePickerExample() {
   };
 
 
-
-
-
+  function TitleList() {
+    const listItems = resultDetais.map((detail,key) =>
+      <Text
+      
+      style={{
+        color: "rgb("+detail.red+","+detail.green+","+detail.blue+")",
+        fontSize: 20
+      }}
+      key={key}>
+        {detail.title}
+      </Text>
+    );
+    return (
+      <View>{listItems}</View>
+    );
+  }
 
   
 
@@ -111,23 +123,28 @@ export default function ImagePickerExample() {
 
 
   return (
-    <View style={{
+    <ScrollView style={{
       marginTop:25
       
     }}>
       <Button title="Gallery" onPress={pickImage} />
       <Button title="Camera" onPress={pickCamera} />
-      {resultImage && (
-        <Image  source={{ uri: resultImage }} style={{ resizeMode: "contain", width: 400, height: 700}} />
+      {resultImage&& resultDetais && (
+        <View>
+        <TitleList />
+        <Image  source={{ uri: resultImage }} style={{ resizeMode: "contain", width: 420, height: 750}} />
+        {console.log(resultDetais)}
+        
+        </View>
         
       )}
       
       {image && !resultImage  && (
-        <Image source={{ uri: image }} style={{ resizeMode: "contain",width:400, height: 400}} />
-        
+        <Image source={{ uri: image }} style={{ resizeMode: "contain",width:420, height: 750}} />
+
       )}
       
-    </View>
+    </ScrollView>
   );
 }
 
