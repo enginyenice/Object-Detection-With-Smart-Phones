@@ -155,9 +155,9 @@ class Application
 
             $width = $cord["maxX"]-$cord["minX"];
             $height = $cord["maxY"]-$cord["minY"];
-            $size = ($width * $height) /10000;
+            $size = ($width * $height) /5000;
 
-            imagettftext ($clouds,$size,0,$cord["minX"]+8,$cord["minY"]+64,$font_color,$font,$objectsName[$key]);
+            imagettftext ($clouds,$size,0,$cord["minX"]+$size,$cord["minY"]+$size,$font_color,$font,$objectsName[$key]);
 
             array_push($colorPalete,Array(
                 "red"   => $Red,
