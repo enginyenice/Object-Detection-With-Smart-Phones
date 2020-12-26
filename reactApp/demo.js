@@ -7,31 +7,61 @@ import {
   ScrollView,
   View,
   Platform,
+  StatusBar
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { render } from "react-dom";
-
 
 
 
 const styles = StyleSheet.create({
   img: {
-    width: 700,
-    height: 700,
+    
+    flex: 1,
+    aspectRatio: 1,
+    resizeMode: 'contain',
   },
+  scrollView: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: "center"
+    
+  },
+  TextList: {
+    alignItems:"center",
+    margin:0
+},
+TitleText :{
+  fontSize: 20,
+  fontWeight: "bold",
+  textDecorationLine: "underline",
+},
+bottomView: {
+  width: "100%",
+  justifyContent: "space-evenly",
+  position: 'relative',
+  bottom: 0,
+},
+camera: {
+  fontWeight: "bold",
+  
+}
+
+
 
 });
 
 
-let  responseData;
 export default function ImagePickerExample() {
   const [image, setImage] = useState(null);
   const [resultImage, setResultImage] = useState(null);
   const [resultDetais, setResultDetais] = useState(null);
-
+  const [status, setStatus] = useState(null);
+  
+  
 
   useEffect(() => {
     (async () => {
+      setStatus("none")
       if (Platform.OS !== "web") {
         const {
           status,
@@ -52,6 +82,7 @@ export default function ImagePickerExample() {
     if (!result.cancelled) {
       setImage(result.uri);
       uploadImages(result)
+      setStatus("selected")
     }
   };
   pickCamera = async () => {
@@ -68,7 +99,7 @@ export default function ImagePickerExample() {
         
         setImage(result.uri);
         uploadImages(result)
-        
+        setStatus("selected")
       }
     }
   };
@@ -87,11 +118,9 @@ export default function ImagePickerExample() {
          } , body :body} )
       .then((res) => res.json())
       .then((res) => { 
-        //this.setState({path: res[0]["path"], details: res[0]["detail"]});
-  //     console.log(res[0]["path"])
-//       console.log(res[0]["detail"])
        setResultImage(res[0]["path"])
        setResultDetais(res[0]["detail"])
+       setStatus("result")
 
       })
       .catch((e) => console.log(e))
@@ -109,11 +138,14 @@ export default function ImagePickerExample() {
         fontSize: 20
       }}
       key={key}>
-        {detail.title}
+       {key +1 } - {detail.title}
       </Text>
     );
     return (
-      <View>{listItems}</View>
+      <View style={styles.TextList}>
+        <Text style={styles.TitleText}>Images List</Text>
+        {listItems}
+        </View>
     );
   }
 
@@ -123,48 +155,34 @@ export default function ImagePickerExample() {
 
 
   return (
-    <ScrollView style={{
-      marginTop:25
-      
-    }}>
-      <Button title="Gallery" onPress={pickImage} />
-      <Button title="Camera" onPress={pickCamera} />
-      {resultImage&& resultDetais && (
-        <View>
+    
+    <View style={styles.scrollView}>
+     
+      {resultImage&& resultDetais && status == "result" && (
+        <View style={{flex: 1}}>
         <TitleList />
-        <Image  source={{ uri: resultImage }} style={{ resizeMode: "contain", width: 420, height: 750}} />
+        <Image  source={{ uri: resultImage }} style={styles.img} />
         {console.log(resultDetais)}
         
         </View>
         
       )}
       
-      {image && !resultImage  && (
-        <Image source={{ uri: image }} style={{ resizeMode: "contain",width:420, height: 750}} />
-
+      {image && status == "selected" && (
+      <View style={{flex: 1}}>
+        <Image source={{ uri: image }} style={styles.img} />
+      </View>
       )}
-      
-    </ScrollView>
+      <View style={styles.bottomView}>
+        <Button
+        color="#28a745"
+        styles={styles.gallery} title="GALERİDEN SEÇ" onPress={pickImage} />
+        <Button 
+        color="#17a2b8"
+        styles={styles.camera} title="KAMERA İLE ÇEK" onPress={pickCamera} />
+      </View>
+     
+    </View>
   );
 }
 
-
-/*
-
-  uploadImages = async (result) => {
-
-    let body = new FormData();
-    body.append('photo', {uri: result.uri,name: 'photo.jpg',filename :'photo.jpg',type: 'image/jpg'});
-        body.append('Content-Type', 'image/jpg');
-    
-    fetch("http://demo.enginyenice.com/index.php",{ method: 'POST',headers:{  
-         "Content-Type": "multipart/form-data",
-         "otherHeader": "foo",
-         } , body :body} )
-      .then((res) => res.json())
-      .then((res) => { console.log("response" +JSON.stringify(res)); })
-      .catch((e) => console.log(e))
-      .done()
-  };
-
-  */

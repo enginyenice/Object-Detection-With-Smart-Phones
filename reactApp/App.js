@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
-import { View,SafeAreaView} from 'react-native'
 import Demo from './demo.js'
+import Exam from './Exam'
 
 export default class App extends Component {
   render() {
     return (
-      <SafeAreaView>
-        <Demo />
-      </SafeAreaView>
+        <Exam />
     )
   }
 }

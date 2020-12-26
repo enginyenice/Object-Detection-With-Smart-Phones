@@ -127,7 +127,7 @@ class Application
                 throw new \Exception('Unexpected value');
 
         }
-        imagesetthickness($clouds, 10); //Kalem kalınlığı
+        imagesetthickness($clouds, 5); //Kalem kalınlığı
 
         $colorPalete = array();
         foreach ($cords as $key=> $cord){
@@ -155,9 +155,10 @@ class Application
 
             $width = $cord["maxX"]-$cord["minX"];
             $height = $cord["maxY"]-$cord["minY"];
-            $size = ($width * $height) /5000;
+            //$size = ($width * $height) /5000;
+            $size = 14;
 
-            imagettftext ($clouds,$size,0,$cord["minX"]+$size,$cord["minY"]+$size,$font_color,$font,$objectsName[$key]);
+            imagettftext ($clouds,$size,0,$cord["minX"],$cord["minY"]-($size+5),$font_color,$font,$objectsName[$key]);
 
             array_push($colorPalete,Array(
                 "red"   => $Red,
