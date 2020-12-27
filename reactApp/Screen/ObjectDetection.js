@@ -3,7 +3,7 @@ import { StyleSheet, Modal, StatusBar, Button, View, Text } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
 import * as ImagePicker from "expo-image-picker";
 
-const Exam = () => {
+const ObjectDetection = () => {
   const [image, setImage] = useState(null);
   const [resultImage, setResultImage] = useState(null);
   const [resultDetails, setResultDetails] = useState(null);
@@ -77,17 +77,21 @@ const Exam = () => {
   };
   let uploadImages = async (result) => {
     setUpload(true);
+    let res = result['uri'].split(".")
+    let type = res[res.length -1]
+    
+
     let path;
     let details;
     let body = new FormData();
     body.append("photo", {
       uri: result.uri,
-      name: "photo.jpg",
-      filename: "photo.jpg",
-      type: "image/jpg",
+      name: "photo."+type,
+      filename: "photo."+type,
+      type: "image/"+type,
     });
-    body.append("Content-Type", "image/jpg");
-
+    
+    body.append("Content-Type", "image/"+type);
     fetch("http://yazlab.enginyenice.com/index.php", {
       method: "POST",
       headers: {
@@ -98,6 +102,7 @@ const Exam = () => {
     })
       .then((res) => res.json())
       .then((res) => {
+        console.log(res)
         setResultImage(res[0]["path"]);
         setResultDetails(res[0]["detail"]);
         setStatus("result");
@@ -107,6 +112,7 @@ const Exam = () => {
       .done(() => {
         setUpload(false)
       });
+      
   };
 
   function TitleList() {
@@ -182,7 +188,7 @@ const Exam = () => {
   );
 };
 
-export default Exam;
+export default ObjectDetection;
 
 const styles = StyleSheet.create({
   screen: {

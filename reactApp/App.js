@@ -1,11 +1,33 @@
-import React, { Component } from 'react'
-import Demo from './demo.js'
-import Exam from './Exam'
+import React, {useState} from 'react'
+import { StyleSheet, Text,StatusBar, View } from 'react-native'
+import Home from "./Screen/Home"
+import ObjectDetection from "./Screen/ObjectDetection"
 
-export default class App extends Component {
-  render() {
-    return (
-        <Exam />
-    )
-  }
+
+
+const App = () => {
+  const [selectScreen, setSelectScreen] = useState("object");
+  let screen = <Text>Default</Text>
+
+  if(selectScreen == "home")
+    screen = <Home />
+  else if(selectScreen == "object")
+    screen = <ObjectDetection />
+
+
+  return (
+    <View style={styles.screen}>
+      {screen}
+    </View>
+  )
 }
+
+export default App
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    width: "100%",
+    marginTop: StatusBar.currentHeight,
+  },
+});
