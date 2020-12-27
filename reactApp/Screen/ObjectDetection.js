@@ -3,7 +3,7 @@ import { StyleSheet, Modal, StatusBar, Button, View, Text } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
 import * as ImagePicker from "expo-image-picker";
 
-const ObjectDetection = () => {
+const ObjectDetection = (props) => {
   const [image, setImage] = useState(null);
   const [resultImage, setResultImage] = useState(null);
   const [resultDetails, setResultDetails] = useState(null);
@@ -20,6 +20,7 @@ const ObjectDetection = () => {
 
   useEffect(() => {
     (async () => {
+     
       setStatus("none");
       if (Platform.OS !== "web") {
         const {
@@ -77,21 +78,20 @@ const ObjectDetection = () => {
   };
   let uploadImages = async (result) => {
     setUpload(true);
-    let res = result['uri'].split(".")
-    let type = res[res.length -1]
-    
+    let res = result["uri"].split(".");
+    let type = res[res.length - 1];
 
     let path;
     let details;
     let body = new FormData();
     body.append("photo", {
       uri: result.uri,
-      name: "photo."+type,
-      filename: "photo."+type,
-      type: "image/"+type,
+      name: "photo." + type,
+      filename: "photo." + type,
+      type: "image/" + type,
     });
-    
-    body.append("Content-Type", "image/"+type);
+
+    body.append("Content-Type", "image/" + type);
     fetch("http://yazlab.enginyenice.com/index.php", {
       method: "POST",
       headers: {
@@ -102,7 +102,6 @@ const ObjectDetection = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         setResultImage(res[0]["path"]);
         setResultDetails(res[0]["detail"]);
         setStatus("result");
@@ -110,11 +109,13 @@ const ObjectDetection = () => {
       })
       .catch((e) => console.log(e))
       .done(() => {
-        setUpload(false)
+        setUpload(false);
       });
-      
   };
 
+  function updateScreen(){
+    props.data.changeScreen("home")
+  }
   function TitleList() {
     const listItems = resultDetails.map((detail, key) => (
       <Text
@@ -133,7 +134,9 @@ const ObjectDetection = () => {
       <View style={styles.TextListView}>
         <Text style={styles.ListTitle}>OBJECT LIST</Text>
         {listItems}
-        <Text style={styles.ListTitle}>{resultDetails.length} objects detected.</Text>
+        <Text style={styles.ListTitle}>
+          {resultDetails.length} objects detected.
+        </Text>
       </View>
     );
   }
@@ -175,8 +178,9 @@ const ObjectDetection = () => {
         </View>
       )}
       <View style={styles.buttonContainer}>
-        <Button onPress={pickCamera} title="Kamerayı Aç"></Button>
-        <Button onPress={pickImage} title="Galeriye Git"></Button>
+        <Button onPress={updateScreen} title="Anasayfa" />
+        <Button onPress={pickCamera} title="Kamera"></Button>
+        <Button onPress={pickImage} title="Galeri"></Button>
         {resultDetails && (
           <Button
             onPress={() => setDetailStatus(true)}
@@ -222,11 +226,11 @@ const styles = StyleSheet.create({
   controlText: {
     fontSize: 20,
     fontWeight: "bold",
-    color:"red"
+    color: "red",
   },
   controlTextTwo: {
     fontSize: 20,
     fontWeight: "bold",
-    color:"black"
-  }
+    color: "black",
+  },
 });

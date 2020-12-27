@@ -1,10 +1,19 @@
 import React from 'react'
-import { StyleSheet,StatusBar, Text, View } from 'react-native'
+import { StyleSheet,Button, Text, View } from 'react-native'
 
-const home = () => {
+const home = (props) => {
+    
     return (
         <View>
-            <Text>XYZ</Text>
+            <Text>{props.data.selectScreen}</Text>
+            <Button
+            title="Resim Gönder"
+            onPress={() => {props.data.changeScreen("object")}}
+            ></Button>
+            <Button
+            title="Tespit Edilen Resimler"
+            onPress={() => {props.data.changeScreen("gallery")}}
+            ></Button>
         </View>
     )
 }
