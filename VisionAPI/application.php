@@ -5,7 +5,7 @@ class Application
 {
 
     private $NewImagePath = "";
-    private $BaseUrl = "http://demo.enginyenice.com/";
+    private $BaseUrl = "http://yazlab.enginyenice.com/";
     private $ImagePath = "";
 
 
@@ -149,16 +149,27 @@ class Application
             imagettftext ( resource $image , float $size , float $angle , int $x , int $y , int $color , string $fontfile , string $text )
 
             */
-            $font_color =  0x000000;
+
+
+
+            $font_color =  imagecolorclosest($clouds, $Red, $Green, $Blue);
             $font = './arial.ttf';
 
 
             $width = $cord["maxX"]-$cord["minX"];
             $height = $cord["maxY"]-$cord["minY"];
             //$size = ($width * $height) /5000;
-            $size = 14;
+            $f1 = $W / 40;
+            $f2 = $H / 40;
+            $size = ($f1 > $f2) ? $f1 : $f2;
 
-            imagettftext ($clouds,$size,0,$cord["minX"],$cord["minY"]-($size+5),$font_color,$font,$objectsName[$key]);
+
+            $bbox = imagettfbbox ($size,45,$font,$objectsName[$key]);
+            $x = $bbox[0] + $cord["minX"];
+            $y = $bbox[1] + $cord["maxY"] - ($size / 3);
+
+
+            imagettftext ($clouds,$size,0,$x,$y,$font_color,$font,$objectsName[$key]);
 
             array_push($colorPalete,Array(
                 "red"   => $Red,

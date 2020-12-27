@@ -3,16 +3,19 @@ import { StyleSheet, Modal, StatusBar, Button, View, Text } from "react-native";
 import ImageViewer from "react-native-image-zoom-viewer";
 import * as ImagePicker from "expo-image-picker";
 
-
-
 const Exam = () => {
   const [image, setImage] = useState(null);
   const [resultImage, setResultImage] = useState(null);
   const [resultDetails, setResultDetails] = useState(null);
-  const [status, setStatus] = useState(null);
   const [detailStatus, setDetailStatus] = useState(false);
+  const [upload, setUpload] = useState(false);
+  const [status, setStatus] = useState(false);
+
   const [showImage, setShowImage] = useState([
-    { url: "https://www.google.com.tr/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png" },
+    {
+      url:
+        "https://www.google.com.tr/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png",
+    },
   ]);
 
   useEffect(() => {
@@ -41,7 +44,6 @@ const Exam = () => {
     if (!result.cancelled) {
       setImage(result.uri);
       uploadImages(result);
-      setStatus("selected");
       setShowImage([
         {
           url: result.uri,
@@ -65,7 +67,6 @@ const Exam = () => {
       {
         setImage(result.uri);
         uploadImages(result);
-        setStatus("selected");
         setShowImage([
           {
             url: result.uri,
@@ -75,6 +76,7 @@ const Exam = () => {
     }
   };
   let uploadImages = async (result) => {
+    setUpload(true);
     let path;
     let details;
     let body = new FormData();
@@ -99,19 +101,24 @@ const Exam = () => {
         setResultImage(res[0]["path"]);
         setResultDetails(res[0]["detail"]);
         setStatus("result");
-        console.log(res[0]["path"]);
         setShowImage([{ url: res[0]["path"] }]);
       })
       .catch((e) => console.log(e))
-      .done();
+      .done(() => {
+        setUpload(false)
+      });
   };
 
   function TitleList() {
     const listItems = resultDetails.map((detail, key) => (
-      <Text key={key} style={{
-        fontSize: 25,
-        color: "rgb("+detail.red+","+detail.green+","+detail.blue+")"
-      }}>
+      <Text
+        key={key}
+        style={{
+          fontSize: 25,
+          color:
+            "rgb(" + detail.red + "," + detail.green + "," + detail.blue + ")",
+        }}
+      >
         {" "}
         {key + 1} - {detail.title}
       </Text>
@@ -120,6 +127,7 @@ const Exam = () => {
       <View style={styles.TextListView}>
         <Text style={styles.ListTitle}>OBJECT LIST</Text>
         {listItems}
+        <Text style={styles.ListTitle}>{resultDetails.length} objects detected.</Text>
       </View>
     );
   }
@@ -127,60 +135,48 @@ const Exam = () => {
   return (
     <View style={styles.screen}>
       {resultImage && image && resultDetails && (
-          <>
-            <Modal
-              animationType="slide"
-              transparent={false}
-              //visible={this.state.modalStatus}
-              visible={detailStatus}
-            >
-              <TitleList />
-              <View style={styles.buttonContainer}>
-                <Button
-                  title=" Modal Kapat "
-                  onPress={() => setDetailStatus(false)}
-                />
-              </View>
-            </Modal>
-            <ImageViewer
-              backgroundColor="#fff"
-              saveToLocalByLongPress={false}
-              style={styles.picture}
-              imageUrls={showImage}
-            />
-          </>
-        )}
-
-      {image && !resultImage && (
-        <ImageViewer
-          backgroundColor="#fff"
-          saveToLocalByLongPress={false}
-          style={styles.picture}
-          imageUrls={showImage}
-        />
-      )}
-
-        {
-            !image && !resultImage && (
-                <ImageViewer
+        <>
+          <Modal
+            animationType="fade"
+            transparent={false}
+            visible={detailStatus}
+          >
+            <TitleList />
+            <View style={styles.buttonContainer}>
+              <Button
+                title=" Modal Kapat "
+                onPress={() => setDetailStatus(false)}
+              />
+            </View>
+          </Modal>
+          <ImageViewer
             backgroundColor="#fff"
             saveToLocalByLongPress={false}
             style={styles.picture}
             imageUrls={showImage}
-        />
-            )
-        }
+          />
+        </>
+      )}
+
+      {upload == true && (
+        <View>
+          <Text style={styles.controlText}>
+            Resim Çözümleniyor. Lütfen Bekleyiniz...
+          </Text>
+          <Text style={styles.controlTextTwo}>
+            (Sonuçlar internet hızınıza göre değişkenlik gösterebilir.)
+          </Text>
+        </View>
+      )}
       <View style={styles.buttonContainer}>
         <Button onPress={pickCamera} title="Kamerayı Aç"></Button>
         <Button onPress={pickImage} title="Galeriye Git"></Button>
-        {
-            resultDetails && (
-                <Button
-          onPress={() => setDetailStatus(true)}
-          title="Resim Detayları"
-        ></Button>
-            )
-        }
+        {resultDetails && (
+          <Button
+            onPress={() => setDetailStatus(true)}
+            title="Resim Detayları"
+          ></Button>
+        )}
       </View>
     </View>
   );
@@ -217,4 +213,14 @@ const styles = StyleSheet.create({
     textDecorationLine: "underline",
     color: "red",
   },
+  controlText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color:"red"
+  },
+  controlTextTwo: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color:"black"
+  }
 });
