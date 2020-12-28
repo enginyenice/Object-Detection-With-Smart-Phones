@@ -3,12 +3,14 @@ require 'vendor/autoload.php';
 use Google\Cloud\Vision\VisionClient;
 class Application
 {
-
     private $NewImagePath = "";
-    private $BaseUrl = "http://yazlab.enginyenice.com/";
+    private $BaseUrl = "";
     private $ImagePath = "";
 
 
+    function __construct(){
+       $this->BaseUrl= "http://".$_SERVER['SERVER_NAME']."/";
+    }
     public function ObjectDetection($ImagePath = "",$type = "")
     {
 
@@ -30,6 +32,12 @@ class Application
 
         $result = Array();
         array_push($result,Array(
+            "path"  => $this->BaseUrl.$this->NewImagePath,
+            "detail" => $colorAndTitle
+        ));
+        
+         $result = Array();
+         array_push($result,Array(
             "path"  => $this->BaseUrl.$this->NewImagePath,
             "detail" => $colorAndTitle
         ));
@@ -106,7 +114,7 @@ class Application
             echo "#################################</br>";
         }
     }
-    private function ImageDraw($path = "",Array $cords,$type = "", Array $objectsName)
+    private function ImageDraw($path = "",Array $cords,$type, Array $objectsName)
     {
 
 
@@ -124,7 +132,7 @@ class Application
                 $clouds = imagecreatefrompng ($this->ImagePath);
                 break;
             default:
-                throw new \Exception('Unexpected value');
+                 $clouds = imagecreatefromjpeg ($this->ImagePath);
 
         }
         imagesetthickness($clouds, 5); //Kalem kalınlığı
@@ -142,16 +150,8 @@ class Application
             imagerectangle($clouds,  $cord["minX"],  $cord["minY"], $cord["maxX"], $cord["maxY"], $randColor);
 
 
-            /*
-            imagestring($clouds, 14, ($cord["minX"] + $cord["maxX"]) / 2, $cord["minY"], $objectsName[0] , $randColor);
-            ------------------
-
-            imagettftext ( resource $image , float $size , float $angle , int $x , int $y , int $color , string $fontfile , string $text )
-
-            */
-
-
-
+            
+            
             $font_color =  imagecolorclosest($clouds, $Red, $Green, $Blue);
             $font = './arial.ttf';
 

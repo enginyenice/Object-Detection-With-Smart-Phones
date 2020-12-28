@@ -1,7 +1,7 @@
-import React, { useState, useEffect, Component } from "react";
-import { StyleSheet, Modal, StatusBar, Button, View, Text } from "react-native";
-import ImageViewer from "react-native-image-zoom-viewer";
-import * as ImagePicker from "expo-image-picker";
+import React, {useState, useEffect, Component} from 'react';
+import {StyleSheet, Modal, StatusBar, Button, View, Text} from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import * as ImagePicker from 'react-native-image-picker';
 
 const ObjectDetection = (props) => {
   const [image, setImage] = useState(null);
@@ -10,103 +10,88 @@ const ObjectDetection = (props) => {
   const [detailStatus, setDetailStatus] = useState(false);
   const [upload, setUpload] = useState(false);
   const [status, setStatus] = useState(false);
+  const FetchUrl = "http://34.77.25.182/home/index.php"
 
   const [showImage, setShowImage] = useState([
     {
       url:
-        "https://www.google.com.tr/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png",
+        'https://www.google.com.tr/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png',
     },
   ]);
-
-  useEffect(() => {
-    (async () => {
-     
-      setStatus("none");
-      if (Platform.OS !== "web") {
-        const {
-          status,
-        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-        if (status !== "granted") {
-          alert("Sorry, we need camera roll permissions to make this work!");
-        }
-      }
-    })();
-  }, []);
   let pickImage = async () => {
     setImage(null);
     setResultDetails(null);
     setResultDetails(null);
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: "Images",
-      allowsEditing: false,
-      quality: 1,
-    });
 
-    if (!result.cancelled) {
-      setImage(result.uri);
-      uploadImages(result);
-      setShowImage([
-        {
-          url: result.uri,
-        },
-      ]);
-    }
+    ImagePicker.launchImageLibrary(
+      {
+        mediaType: 'photo',
+      },
+      (response) => {
+        if (!response.cancelled) {
+          setImage(response.uri);
+          uploadImages(response);
+          setShowImage([
+            {
+              url: response.uri,
+            },
+          ]);
+        }
+      },
+    );
   };
   let pickCamera = async () => {
     setImage(null);
     setResultDetails(null);
     setResultDetails(null);
-    //ImagePicker.launchCameraAsync(options)
 
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: "Images",
-      allowsEditing: false,
-      quality: 1,
-    });
-
-    if (!result.cancelled) {
-      {
-        setImage(result.uri);
-        uploadImages(result);
+    ImagePicker.launchCamera({mediaType: 'photo'}, (response) => {
+      if (response.error) {
+        console.log('LaunchCamera Error: ', response.error);
+      }
+      if (!response.cancelled) {
+        setImage(response.uri);
+        uploadImages(response);
         setShowImage([
           {
-            url: result.uri,
+            url: response.uri,
           },
         ]);
       }
-    }
+    });
   };
   let uploadImages = async (result) => {
     setUpload(true);
-    let res = result["uri"].split(".");
+    let res = result['uri'].split('.');
     let type = res[res.length - 1];
 
     let path;
     let details;
     let body = new FormData();
-    body.append("photo", {
+    body.append('photo', {
       uri: result.uri,
-      name: "photo." + type,
-      filename: "photo." + type,
-      type: "image/" + type,
+      name: 'photo.' + type,
+      filename: 'photo.' + type,
+      type: 'image/' + type,
     });
 
-    body.append("Content-Type", "image/" + type);
-    fetch("http://yazlab.enginyenice.com/index.php", {
-      method: "POST",
+    body.append('Content-Type', 'image/' + type);
+    fetch(FetchUrl, {
+      method: 'POST',
       headers: {
-        "Content-Type": "multipart/form-data",
-        otherHeader: "foo",
+        'Content-Type': 'multipart/form-data',
+        otherHeader: 'foo',
       },
       body: body,
     })
-      .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-        setResultImage(res[0]["path"]);
-        setResultDetails(res[0]["detail"]);
-        setStatus("result");
-        setShowImage([{ url: res[0]["path"] }]);
+        console.log(res)
+        res.json()})
+      .then((res) => {
+        setResultImage(res[0]['path']);
+        setResultDetails(res[0]['detail']);
+        setStatus('result');
+        setShowImage([{url: res[0]['path']}]);
       })
       .catch((e) => console.log(e))
       .done(() => {
@@ -114,8 +99,8 @@ const ObjectDetection = (props) => {
       });
   };
 
-  function updateScreen(){
-    props.data.changeScreen("home")
+  function updateScreen() {
+    props.data.changeScreen('home');
   }
   function TitleList() {
     const listItems = resultDetails.map((detail, key) => (
@@ -124,10 +109,9 @@ const ObjectDetection = (props) => {
         style={{
           fontSize: 25,
           color:
-            "rgb(" + detail.red + "," + detail.green + "," + detail.blue + ")",
-        }}
-      >
-        {" "}
+            'rgb(' + detail.red + ',' + detail.green + ',' + detail.blue + ')',
+        }}>
+        {' '}
         {key + 1} - {detail.title}
       </Text>
     ));
@@ -149,8 +133,7 @@ const ObjectDetection = (props) => {
           <Modal
             animationType="fade"
             transparent={false}
-            visible={detailStatus}
-          >
+            visible={detailStatus}>
             <TitleList />
             <View style={styles.buttonContainer}>
               <Button
@@ -185,8 +168,7 @@ const ObjectDetection = (props) => {
         {resultDetails && (
           <Button
             onPress={() => setDetailStatus(true)}
-            title="Resim Detayları"
-          ></Button>
+            title="Resim Detayları"></Button>
         )}
       </View>
     </View>
@@ -198,40 +180,40 @@ export default ObjectDetection;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    width: "100%",
+    width: '100%',
     marginTop: StatusBar.currentHeight,
   },
   pictureView: {
     flex: 2,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   picture: {},
   buttonContainer: {
-    display: "flex",
-    flexDirection: "row",
-    width: "100%",
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
     paddingBottom: 25,
-    justifyContent: "space-evenly",
+    justifyContent: 'space-evenly',
   },
   TextListView: {
-    textAlign: "center",
+    textAlign: 'center',
   },
   ListTitle: {
-    textAlign: "center",
-    fontWeight: "bold",
+    textAlign: 'center',
+    fontWeight: 'bold',
     fontSize: 40,
-    textDecorationLine: "underline",
-    color: "red",
+    textDecorationLine: 'underline',
+    color: 'red',
   },
   controlText: {
     fontSize: 20,
-    fontWeight: "bold",
-    color: "red",
+    fontWeight: 'bold',
+    color: 'red',
   },
   controlTextTwo: {
     fontSize: 20,
-    fontWeight: "bold",
-    color: "black",
+    fontWeight: 'bold',
+    color: 'black',
   },
 });
