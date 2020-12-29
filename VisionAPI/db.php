@@ -1,14 +1,11 @@
 <?php
 // https://php-react-database-default-rtdb.firebaseio.com/Images.json
-require_once('./db.php');
+//require_once('./db.php');
 class db  
 {
    public function FirebaseAdd($data,$imagePath){
         
         $data = json_decode($data);
-        
-        
-        
         $path = $imagePath;
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $imageData = file_get_contents($path);
@@ -38,8 +35,8 @@ class db
         $result = Array(
             "detected_path"      =>$data[0]->path,
             "normal_path"        =>$imagePath,
-            "detected_base64"    =>$detectedBase64,
-            "normal_base64"      =>$normalBase64,
+            //"detected_base64"    =>$detectedBase64,
+            //"normal_base64"      =>$normalBase64,
             "details"   => $details
         );
         
@@ -73,8 +70,3 @@ class db
       curl_close($curl);
   }
 }
-
-
-
-
-
