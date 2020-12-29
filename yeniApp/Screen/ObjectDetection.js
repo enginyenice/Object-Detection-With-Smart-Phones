@@ -10,7 +10,7 @@ const ObjectDetection = (props) => {
   const [detailStatus, setDetailStatus] = useState(false);
   const [upload, setUpload] = useState(false);
   const [status, setStatus] = useState(false);
-  const FetchUrl = "http://34.77.25.182/home/index.php"
+  const FetchUrl = "http://yazlab.enginyenice.com/index.php"
 
   const [showImage, setShowImage] = useState([
     {
@@ -84,10 +84,9 @@ const ObjectDetection = (props) => {
       },
       body: body,
     })
+      .then((res) => res.json())
       .then((res) => {
         console.log(res)
-        res.json()})
-      .then((res) => {
         setResultImage(res[0]['path']);
         setResultDetails(res[0]['detail']);
         setStatus('result');

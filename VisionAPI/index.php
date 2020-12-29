@@ -1,32 +1,36 @@
 <?php
 
 require_once('./application.php');
+require_once('./db.php');
 //header("Content-type: application/json");
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: *");
 $app = new application;
+$db = new db;
+
+
+
 if(isset($_FILES['photo'])){
+    $uniq = uniqid(); // Uniq numara
+    $dizin = 'normalImages/'; // Klasör
+    $name = $uniq.basename($_FILES['photo']['name']); // Resim ismi
+    $yuklenecek_dosya = $dizin .$name; // Yüklenecek dosyanın tam yolu
 
 
-  
-    $i = 1;
-    $uniq = uniqid();
-
-    $dizin = 'normalImages/';
-    $yuklenecek_dosya = $dizin .$uniq.basename($_FILES['photo']['name']);
-
-
-    move_uploaded_file($_FILES['photo']['tmp_name'], $yuklenecek_dosya);
-    $imagePath = $app->GetBaseUrl()."/".$yuklenecek_dosya;
-
-    $FullType = explode("/", $_FILES['photo']['name']);
+    move_uploaded_file($_FILES['photo']['tmp_name'], $yuklenecek_dosya); // Dosya yüklenir.
+    $imagePath = $app->GetBaseUrl().$yuklenecek_dosya; // Dosya Yolu
     
-   $type = strtolower($FullType[1]);
+
+    $type = explode('/',$_FILES['photo']['type']); // fullType image/png
+    $type = strtolower($type[1]); // png
+    $result = $app->ObjectDetection($imagePath,$type); 
+   
+   
 
 
-    $type = explode('/',$_FILES['photo']['type']);
-    $type = strtolower($type[1]);
-    $result = $app->ObjectDetection($imagePath,$type);
+
+   
+    $db->FirebaseAdd($result,$imagePath);
     echo $result;
     
     

@@ -6,16 +6,17 @@ class Application
     private $NewImagePath = "";
     private $BaseUrl = "";
     private $ImagePath = "";
-
+    private $database = "";
 
     function __construct(){
-       $this->BaseUrl= "http://".$_SERVER['SERVER_NAME']."/";
+        $this->database = new db;
+        $this->BaseUrl= "http://".$_SERVER['SERVER_NAME']."/";
     }
     public function ObjectDetection($ImagePath = "",$type = "")
     {
 
         $this->ImagePath = $ImagePath;
-        $vision = new VisionClient(['keyFile' => json_decode(file_get_contents("key.json"),true)]);
+        $vision = new VisionClient(['keyFile' => json_decode(file_get_contents("secret/key.json"),true)]);
         $dog = fopen($this->ImagePath,'r');
         $img = $vision->image($dog,['OBJECT_LOCALIZATION']);
         $objects = $vision->annotate($img);

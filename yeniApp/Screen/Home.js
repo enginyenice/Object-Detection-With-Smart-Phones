@@ -5,7 +5,10 @@ const home = (props) => {
     
     return (
         <View>
-            <Text>{props.data.selectScreen}</Text>
+            <Text style={styles.welcomeApp}>Kocaeli Üniversitesi</Text>
+            <Text style={styles.welcomeApp}>Yazılım Laboratuvarı 1</Text>
+            <Text style={styles.welcomeApp}>Proje 3</Text>
+            <Text style={styles.welcomeApp}>Engin Yenice</Text>
             <Button
             title="Resim Gönder"
             onPress={() => {props.data.changeScreen("object")}}
@@ -19,4 +22,11 @@ const home = (props) => {
 }
 
 export default home
-const styles = StyleSheet.create({  });
+const styles = StyleSheet.create({ 
+    welcomeApp: {
+        color:"red",
+        fontSize: 25,
+        textAlign:"center",
+        
+    }
+ });

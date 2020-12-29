@@ -52,6 +52,5 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     width: "100%",
-    marginTop: StatusBar.currentHeight,
   },
 });
