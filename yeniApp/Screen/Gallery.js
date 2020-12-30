@@ -37,12 +37,18 @@ const home = (props) => {
   }
 
   function closeModal() {
-    setShowImage(null)
-    setGalleryModalStatus(false)
+    setShowImage(null);
+
+    setGalleryModalStatus(false);
   }
   function openModel(data) {
     setSelectedDefaultPath(data['normal_path']);
     setSelectedDetectedPath(data['detected_path']);
+    /*
+    setSelectedDefaultPath(data['normal_base64']);
+    setSelectedDetectedPath(data['detected_base64']);
+    */
+    
     setShowImage([
       {
         url: selectedDetectedPath,
@@ -51,29 +57,30 @@ const home = (props) => {
         url: selectedDefaultPath,
       },
     ]);
-    setSelectedDetail(data['details']);
-    
-    setGalleryModalStatus(false)
-    setGalleryModalStatus(true)
-    
+    setSelectedDetail(data['details'])
+
+      setGalleryModalStatus(true);
   }
 
   function CreateGallery() {
     const items = [];
     for (let index in galleryList) {
-      items.push(
-        <TouchableHighlight
-          key={index}
-          onPress={() => openModel(galleryList[index])}>
-          <Image
+     
+        items.push(
+          <TouchableHighlight
             key={index}
-            style={styles.galleryImage}
-            source={{
-              uri: galleryList[index]['detected_path'],
-            }}
-          />
-        </TouchableHighlight>,
-      );
+            onPress={() => openModel(galleryList[index])}>
+            <Image
+              key={index}
+              style={styles.galleryImage}
+              source={{
+                //uri: galleryList[index]['detected_base64'],
+                uri: galleryList[index]['detected_path'],
+              }}
+            />
+          </TouchableHighlight>,
+        );
+      
     }
     return <View style={styles.scroll}>{items}</View>;
   }
@@ -115,7 +122,7 @@ const home = (props) => {
       <ScrollView>
         {galleryList && <CreateGallery />}
 
-        {galleryModalStatus == true && (
+        {galleryModalStatus == true && showImage &&  (
           <Modal animationType="fade" transparent={true} visible={true}>
             <ImageViewer
               backgroundColor="#fff"

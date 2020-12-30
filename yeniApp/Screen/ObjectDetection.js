@@ -63,7 +63,7 @@ const ObjectDetection = (props) => {
   let uploadImages = async (result) => {
     setUpload(true);
     let res = result['uri'].split('.');
-    let type = res[res.length - 1];
+    let type = res[res.length - 1]; // image.  jpg
 
     let path;
     let details;
