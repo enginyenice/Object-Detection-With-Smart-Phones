@@ -28,7 +28,7 @@ const ObjectDetection = (props) => {
         mediaType: 'photo',
       },
       (response) => {
-        if (!response.cancelled) {
+        if (!response.cancelled && response["didCancel"] != true) {
           setImage(response.uri);
           uploadImages(response);
           setShowImage([
@@ -49,7 +49,7 @@ const ObjectDetection = (props) => {
       if (response.error) {
         console.log('LaunchCamera Error: ', response.error);
       }
-      if (!response.cancelled) {
+      if (!response.cancelled && response["didCancel"] != true) {
         setImage(response.uri);
         uploadImages(response);
         setShowImage([

@@ -18,7 +18,6 @@ const home = (props) => {
   const [selectedDetectedPath, setSelectedDetectedPath] = useState(null);
   const [selectedDetail, setSelectedDetail] = useState(null);
   const [galleryModalStatus, setGalleryModalStatus] = useState(false);
-  const [showImage, setShowImage] = useState(null);
   const [showDetail, setShowDetail] = useState(false);
 
   const FetchUrl =
@@ -37,8 +36,7 @@ const home = (props) => {
   }
 
   function closeModal() {
-    setShowImage(null);
-
+    
     setGalleryModalStatus(false);
   }
   function openModel(data) {
@@ -48,15 +46,7 @@ const home = (props) => {
     setSelectedDefaultPath(data['normal_base64']);
     setSelectedDetectedPath(data['detected_base64']);
     */
-    
-    setShowImage([
-      {
-        url: selectedDetectedPath,
-      },
-      {
-        url: selectedDefaultPath,
-      },
-    ]);
+   
     setSelectedDetail(data['details'])
 
       setGalleryModalStatus(true);
@@ -109,6 +99,34 @@ const home = (props) => {
     );
   }
 
+  
+  function ShowDetectedImage(props){
+    let ShowSelectedImage = [
+      {
+        url: selectedDetectedPath,
+      },
+      {
+        url: selectedDefaultPath,
+      },
+    ]
+    return (
+      <Modal animationType="fade" transparent={true} visible={true}>
+            <ImageViewer
+              backgroundColor="#fff"
+              saveToLocalByLongPress={false}
+              imageUrls={ShowSelectedImage}
+            />
+            <View style={styles.buttonContainer}>
+              <Button title=" Galeriye Dön " onPress={closeModal} />
+              <Button
+                title=" Resim Detayları "
+                onPress={() => setShowDetail(true)}
+              />
+            </View>
+          </Modal>
+    )
+  }
+
   fetchGallery();
 
   return (
@@ -122,21 +140,8 @@ const home = (props) => {
       <ScrollView>
         {galleryList && <CreateGallery />}
 
-        {galleryModalStatus == true && showImage &&  (
-          <Modal animationType="fade" transparent={true} visible={true}>
-            <ImageViewer
-              backgroundColor="#fff"
-              saveToLocalByLongPress={false}
-              imageUrls={showImage}
-            />
-            <View style={styles.buttonContainer}>
-              <Button title=" Galeriye Dön " onPress={closeModal} />
-              <Button
-                title=" Resim Detayları "
-                onPress={() => setShowDetail(true)}
-              />
-            </View>
-          </Modal>
+        {galleryModalStatus == true &&  (
+          <ShowDetectedImage />
         )}
 
         {showDetail == true && (
