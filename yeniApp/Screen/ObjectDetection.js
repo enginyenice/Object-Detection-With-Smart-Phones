@@ -10,7 +10,8 @@ const ObjectDetection = (props) => {
   const [detailStatus, setDetailStatus] = useState(false);
   const [upload, setUpload] = useState(false);
   const [status, setStatus] = useState(false);
-  const FetchUrl = "http://yazlab.enginyenice.com/index.php"
+  const FetchUrl = "http://34.123.97.64/index.php"
+  // const FetchUrl = "http://yazlab.enginyenice.com/index.php"
 
   const [showImage, setShowImage] = useState([
     {

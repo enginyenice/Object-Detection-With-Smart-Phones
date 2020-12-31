@@ -12,16 +12,31 @@ class Application
         $this->database = new db;
         $this->BaseUrl= "http://".$_SERVER['SERVER_NAME']."/";
     }
-    public function ObjectDetection($ImagePath = "",$type = "")
+    public function ObjectDetection($ImagePath = "",$ImageHostPath,$type = "")
     {
 
         $this->ImagePath = $ImagePath;
-        $vision = new VisionClient(['keyFile' => json_decode(file_get_contents("secret/key.json"),true)]);
-        $dog = fopen($this->ImagePath,'r');
+        $vision = new VisionClient(['keyFile' => json_decode(file_get_contents(__DIR__."/secret/key.json"),true)]);
+        $dog = fopen($ImageHostPath,'r');
         $img = $vision->image($dog,['OBJECT_LOCALIZATION']);
         $objects = $vision->annotate($img);
         $info = $objects->info();
+
+/*
+$result = Array(
+"info" => $info
+);
+echo json_encode($result);
+die();
+*/
         $objectsDetail = $info['localizedObjectAnnotations'];
+
+
+
+
+
+
+
         $AllCords = $this->AllCords($objectsDetail);
         $drawObjectsCords = array();
         $objectName = array();
@@ -31,12 +46,13 @@ class Application
         }
         $colorAndTitle = $this->ImageTitlePush($this->ImageDraw($this->ImagePath,$drawObjectsCords,$type,$this->ObjectNameDetected($objectsDetail)),$this->ObjectNameDetected($objectsDetail));
 
-        $result = Array();
+/*      
+  $result = Array();
         array_push($result,Array(
             "path"  => $this->BaseUrl.$this->NewImagePath,
-            "detail" => $colorAndTitle
+           "detail" => $colorAndTitle
         ));
-        
+  */      
          $result = Array();
          array_push($result,Array(
             "path"  => $this->BaseUrl.$this->NewImagePath,
@@ -180,7 +196,7 @@ class Application
         }
         $uniqName = uniqid();
         $imagePath = "detectedImages/".$uniqName.".".$type;
-        imagepng($clouds,$imagePath);
+        imagepng($clouds,__DIR__."/".$imagePath);
         imagedestroy($clouds);
 
         $result = array(

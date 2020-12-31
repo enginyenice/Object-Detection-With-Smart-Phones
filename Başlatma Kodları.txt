@@ -1,0 +1,26 @@
+Compute Engin Apache Komutları
+Apache Start
+sudo /etc/init.d/apache2 start
+Apache Stop
+sudo /etc/init.d/apache2 stop
+Apache Restart
+sudo /etc/init.d/apache2 restart
+
+React Native CLI Başlatma Komutu
+npx react-native run-android
+
+
+Proje dosyaları güncelleme
+Vision API:
+ PHP Version >= 7.4
+ Composer yüklü olmalıdır.
+ klasör içerisinde komut yöneticisine "composer install" yazılmalıdır.
+ !! Proje ana dizine kurulmalıdır. !!
+
+yeniApp Mobil APP:
+ Npm yüklü olmalıdır 
+ React Native >= 0.60
+ klasör içerisinde komut yöneticine "npm install" yazılmalıdır
+
+ 
+
