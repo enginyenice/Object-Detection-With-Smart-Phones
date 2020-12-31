@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet,Button, Text, View,Image } from 'react-native'
 
 
+
 const Separator = () => (
     <View style={styles.separator} />
   );
@@ -22,7 +23,7 @@ const home = (props) => {
             }}
             /> 
             <Separator />
-            <Text style={styles.welcomeApp}>Kocaeli Üniversitesi</Text>
+            <Text style={styles.welcomeApp}> Kocaeli Üniversitesi</Text>
             <Text style={styles.welcomeApp}>Yazılım Laboratuvarı 1</Text>
             <Text style={styles.welcomeApp}>Proje 3</Text>
             <Text style={styles.welcomeApp}>Engin Yenice</Text>
