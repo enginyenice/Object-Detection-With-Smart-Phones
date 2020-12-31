@@ -1,5 +1,5 @@
 import React, {useState, useEffect, Component} from 'react';
-import {StyleSheet, Modal, StatusBar, Button, View, Text} from 'react-native';
+import {StyleSheet, Modal, StatusBar,ScrollView, Button, View, Text} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import * as ImagePicker from 'react-native-image-picker';
 
@@ -10,8 +10,8 @@ const ObjectDetection = (props) => {
   const [detailStatus, setDetailStatus] = useState(false);
   const [upload, setUpload] = useState(false);
   const [status, setStatus] = useState(false);
-  const FetchUrl = "http://34.123.97.64/index.php"
-  // const FetchUrl = "http://yazlab.enginyenice.com/index.php"
+  //const FetchUrl = "http://34.123.97.64/index.php"
+  const FetchUrl = 'http://yazlab.enginyenice.com/index.php';
 
   const [showImage, setShowImage] = useState([
     {
@@ -29,7 +29,7 @@ const ObjectDetection = (props) => {
         mediaType: 'photo',
       },
       (response) => {
-        if (!response.cancelled && response["didCancel"] != true) {
+        if (!response.cancelled && response['didCancel'] != true) {
           setImage(response.uri);
           uploadImages(response);
           setShowImage([
@@ -50,7 +50,7 @@ const ObjectDetection = (props) => {
       if (response.error) {
         console.log('LaunchCamera Error: ', response.error);
       }
-      if (!response.cancelled && response["didCancel"] != true) {
+      if (!response.cancelled && response['didCancel'] != true) {
         setImage(response.uri);
         uploadImages(response);
         setShowImage([
@@ -87,7 +87,7 @@ const ObjectDetection = (props) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
+        console.log(res);
         setResultImage(res[0]['path']);
         setResultDetails(res[0]['detail']);
         setStatus('result');
@@ -134,13 +134,15 @@ const ObjectDetection = (props) => {
             animationType="fade"
             transparent={false}
             visible={detailStatus}>
-            <TitleList />
-            <View style={styles.buttonContainer}>
-              <Button
-                title=" Modal Kapat "
-                onPress={() => setDetailStatus(false)}
-              />
-            </View>
+            <ScrollView>
+              <TitleList />
+              <View style={styles.buttonContainer}>
+                <Button
+                  title="Resime Geri Dön"
+                  onPress={() => setDetailStatus(false)}
+                />
+              </View>
+            </ScrollView>
           </Modal>
           <ImageViewer
             backgroundColor="#fff"
@@ -162,9 +164,9 @@ const ObjectDetection = (props) => {
         </View>
       )}
       <View style={styles.buttonContainer}>
-        <Button onPress={updateScreen} title="Anasayfa" />
-        <Button onPress={pickCamera} title="Kamera"></Button>
-        <Button onPress={pickImage} title="Galeri"></Button>
+        <Button color="#009e49" onPress={updateScreen} title="Anasayfa" />
+        <Button color="#dc3545" onPress={pickCamera} title="Kamera"></Button>
+        <Button color="#0d6efd" onPress={pickImage} title="Galeri"></Button>
         {resultDetails && (
           <Button
             onPress={() => setDetailStatus(true)}
