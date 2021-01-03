@@ -8,7 +8,6 @@ class Application
     private $ImagePath = "";
 
     function __construct(){
-        $this->database = new db;
         $this->BaseUrl= "http://".$_SERVER['SERVER_NAME']."/";
     }
     public function ObjectDetection($ImagePath = "",$ImageHostPath,$type = "")

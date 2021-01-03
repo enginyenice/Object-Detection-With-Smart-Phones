@@ -18,15 +18,10 @@ const ObjectDetection = (props) => {
   const [detailStatus, setDetailStatus] = useState(false);
   const [upload, setUpload] = useState(false);
   const [status, setStatus] = useState(false);
-  const FetchUrl = "http://34.123.97.64/index.php"
+  const FetchUrl = 'http://34.123.97.64/index.php';
   //const FetchUrl = 'http://yazlab.enginyenice.com/index.php';
 
-  const [showImage, setShowImage] = useState([
-    {
-      url:
-        'https://www.google.com.tr/images/branding/googlelogo/2x/googlelogo_color_160x56dp.png',
-    },
-  ]);
+  const [showImage, setShowImage] = useState(null);
   let pickImage = async () => {
     setImage(null);
     setResultDetails(null);
@@ -40,11 +35,6 @@ const ObjectDetection = (props) => {
         if (!response.cancelled && response['didCancel'] != true) {
           setImage(response.uri);
           uploadImages(response);
-          setShowImage([
-            {
-              url: response.uri,
-            },
-          ]);
         }
       },
     );
@@ -61,11 +51,6 @@ const ObjectDetection = (props) => {
       if (!response.cancelled && response['didCancel'] != true) {
         setImage(response.uri);
         uploadImages(response);
-        setShowImage([
-          {
-            url: response.uri,
-          },
-        ]);
       }
     });
   };
@@ -102,7 +87,6 @@ const ObjectDetection = (props) => {
           setShowImage([
             {url: res[index]['detected_path']},
             {url: res[index]['normal_path']},
-          
           ]);
         }
       })
@@ -138,20 +122,20 @@ const ObjectDetection = (props) => {
       </View>
     );
   }
-function GetImages(){
-  const images = showImage;
-  return (
-    <ImageViewer
-    backgroundColor="#fff"
-    saveToLocalByLongPress={false}
-    style={styles.picture}
-    imageUrls={images}
-  />
-  )
-}
+  function GetImages() {
+    const images = showImage;
+    return (
+      <ImageViewer
+        backgroundColor="#fff"
+        saveToLocalByLongPress={false}
+        style={styles.picture}
+        imageUrls={images}
+      />
+    );
+  }
   return (
     <View style={styles.screen}>
-      {resultImage && image && resultDetails && (
+      {showImage != null && (
         <>
           <Modal
             animationType="fade"
@@ -167,7 +151,12 @@ function GetImages(){
               </View>
             </ScrollView>
           </Modal>
-          <GetImages />
+          <ImageViewer
+            backgroundColor="#fff"
+            saveToLocalByLongPress={false}
+            style={styles.picture}
+            imageUrls={showImage}
+          />
         </>
       )}
 

@@ -11,10 +11,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
-//http://yazlab.enginyenice.com/detectedImages/5fe8b5269a8d2.jpg
-
 const Separator = () => <View style={styles.separator} />;
-
 const home = (props) => {
   const [galleryList, setGalleryList] = useState(null);
   const [selectedDefaultPath, setSelectedDefaultPath] = useState(null);
@@ -30,7 +27,6 @@ const home = (props) => {
       fetch(FetchUrl)
         .then((res) => res.json())
         .then((res) => {
-          //console.log(res);
           setGalleryList(res);
         })
         .catch((e) => console.log(e))
@@ -44,13 +40,7 @@ const home = (props) => {
   function openModel(data) {
     setSelectedDefaultPath(data['normal_path']);
     setSelectedDetectedPath(data['detected_path']);
-    /*
-    setSelectedDefaultPath(data['normal_base64']);
-    setSelectedDetectedPath(data['detected_base64']);
-    */
-
     setSelectedDetail(data['details']);
-
     setGalleryModalStatus(true);
   }
 
@@ -65,14 +55,16 @@ const home = (props) => {
             key={index}
             style={styles.galleryImage}
             source={{
-              //uri: galleryList[index]['detected_base64'],
               uri: galleryList[index]['detected_path'],
             }}
           />
         </TouchableHighlight>,
       );
     }
-    return <View style={styles.scroll}>{items}</View>;
+    return <View style={styles.scroll}>
+      <Text style={{width:"100%", fontSize:25,fontStyle:"italic"}}>Tespit Edilen Resimler</Text>
+      {items}
+      </View>;
   }
 
   function TitleList() {
