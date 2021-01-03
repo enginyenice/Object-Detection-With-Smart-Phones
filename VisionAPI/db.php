@@ -1,22 +1,15 @@
 <?php
 // https://php-react-database-default-rtdb.firebaseio.com/Images.json
-//require_once('./db.php');
+require 'storage.php';
 class db  
 {
    public function FirebaseAdd($data,$imagePath){
         
+
+        $storage = new UpdateStorage();
         $data = json_decode($data);
-        $path = $imagePath;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $imageData = file_get_contents($path);
-        $normalBase64 = 'data:image/' . $type . ';base64,' . base64_encode($imageData);
-        
-        
-        
-        $path = $data[0]->path;
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $imageData = file_get_contents($path);
-        $detectedBase64 = 'data:image/' . $type . ';base64,' . base64_encode($imageData);
+
+
 
         $details = Array();
         foreach($data[0]->detail as $detail){
@@ -28,19 +21,22 @@ class db
                 ));
         }
         
-        /*
-                    "normal_base64"      =>$normalBase64,
-            "detected_base64"    =>$detectedBase64
-            */
         $result = Array(
-            "detected_path"      =>$data[0]->path,
-            "normal_path"        =>$imagePath,
-            //"detected_base64"    =>$detectedBase64,
-            //"normal_base64"      =>$normalBase64,
+            "detected_path"      =>$storage->UploadImage($data[0]->path),
+            "normal_path"        =>$storage->UploadImage($imagePath),
             "details"   => $details
         );
         
-        
+        $normalPath   = explode('/', $data[0]->path);
+        $detectedPath = explode('/', $imagePath);
+
+        $fullNormalPath = __DIR__."/".$normalPath[count($normalPath) - 2]."/".$normalPath[count($normalPath) - 1];
+        $fullDetectedPath = __DIR__."/".$detectedPath[count($detectedPath) - 2]."/".$detectedPath[count($detectedPath) - 1];
+        unlink($fullNormalPath);
+        unlink($fullDetectedPath);
+
+
+
         
         $returnData = Array(
              uniqid()  =>$result,
@@ -68,6 +64,17 @@ class db
       ));
       $response = curl_exec($curl);
       curl_close($curl);
+
+
+
+
+/*
+"detected_path"      =>$storage->UploadImage($data[0]->path),
+            "normal_path"        =>$storage->UploadImage($imagePath),
+            */
+
+     
+      return $data;
   }
 }
 

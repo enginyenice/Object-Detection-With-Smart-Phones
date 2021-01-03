@@ -5,6 +5,9 @@ Apache Stop
 sudo /etc/init.d/apache2 stop
 Apache Restart
 sudo /etc/init.d/apache2 restart
+PHP Error LOG
+cd /var/log/apache2/
+NOT: Klasör izinleri 777 olmalıdır. 
 
 React Native CLI Başlatma Komutu
 npx react-native run-android

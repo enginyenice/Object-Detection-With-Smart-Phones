@@ -6,7 +6,6 @@ class Application
     private $NewImagePath = "";
     private $BaseUrl = "";
     private $ImagePath = "";
-    private $database = "";
 
     function __construct(){
         $this->database = new db;
@@ -21,14 +20,6 @@ class Application
         $img = $vision->image($dog,['OBJECT_LOCALIZATION']);
         $objects = $vision->annotate($img);
         $info = $objects->info();
-
-/*
-$result = Array(
-"info" => $info
-);
-echo json_encode($result);
-die();
-*/
         $objectsDetail = $info['localizedObjectAnnotations'];
 
 
@@ -45,14 +36,7 @@ die();
             array_push($drawObjectsCords,$this->MaxMinCords($objectCords));
         }
         $colorAndTitle = $this->ImageTitlePush($this->ImageDraw($this->ImagePath,$drawObjectsCords,$type,$this->ObjectNameDetected($objectsDetail)),$this->ObjectNameDetected($objectsDetail));
-
-/*      
-  $result = Array();
-        array_push($result,Array(
-            "path"  => $this->BaseUrl.$this->NewImagePath,
-           "detail" => $colorAndTitle
-        ));
-  */      
+      
          $result = Array();
          array_push($result,Array(
             "path"  => $this->BaseUrl.$this->NewImagePath,

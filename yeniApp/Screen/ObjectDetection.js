@@ -1,5 +1,13 @@
 import React, {useState, useEffect, Component} from 'react';
-import {StyleSheet, Modal, StatusBar,ScrollView, Button, View, Text} from 'react-native';
+import {
+  StyleSheet,
+  Modal,
+  StatusBar,
+  ScrollView,
+  Button,
+  View,
+  Text,
+} from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import * as ImagePicker from 'react-native-image-picker';
 
@@ -10,8 +18,8 @@ const ObjectDetection = (props) => {
   const [detailStatus, setDetailStatus] = useState(false);
   const [upload, setUpload] = useState(false);
   const [status, setStatus] = useState(false);
-  //const FetchUrl = "http://34.123.97.64/index.php"
-  const FetchUrl = 'http://yazlab.enginyenice.com/index.php';
+  const FetchUrl = "http://34.123.97.64/index.php"
+  //const FetchUrl = 'http://yazlab.enginyenice.com/index.php';
 
   const [showImage, setShowImage] = useState([
     {
@@ -87,11 +95,16 @@ const ObjectDetection = (props) => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log(res);
-        setResultImage(res[0]['path']);
-        setResultDetails(res[0]['detail']);
-        setStatus('result');
-        setShowImage([{url: res[0]['path']}]);
+        for (let index in res) {
+          setResultImage(res[index]['detected_path']);
+          setResultDetails(res[index]['details']);
+          setStatus('result');
+          setShowImage([
+            {url: res[index]['detected_path']},
+            {url: res[index]['normal_path']},
+          
+          ]);
+        }
       })
       .catch((e) => console.log(e))
       .done(() => {
@@ -125,7 +138,17 @@ const ObjectDetection = (props) => {
       </View>
     );
   }
-
+function GetImages(){
+  const images = showImage;
+  return (
+    <ImageViewer
+    backgroundColor="#fff"
+    saveToLocalByLongPress={false}
+    style={styles.picture}
+    imageUrls={images}
+  />
+  )
+}
   return (
     <View style={styles.screen}>
       {resultImage && image && resultDetails && (
@@ -144,12 +167,7 @@ const ObjectDetection = (props) => {
               </View>
             </ScrollView>
           </Modal>
-          <ImageViewer
-            backgroundColor="#fff"
-            saveToLocalByLongPress={false}
-            style={styles.picture}
-            imageUrls={showImage}
-          />
+          <GetImages />
         </>
       )}
 

@@ -27,16 +27,11 @@ if(isset($_FILES['photo'])){
     $type = explode('/',$_FILES['photo']['type']); // fullType image/png
     $type = strtolower($type[1]); // png
     $result = $app->ObjectDetection($imagePath,$yuklenecek_dosya,$type); 
-   
-   
 
 
+    $result = $db->FirebaseAdd($result,$imagePath);
 
-   
-    $db->FirebaseAdd($result,$imagePath);
     echo $result;
-    
-    
 
 } else {
     $result = Array();
