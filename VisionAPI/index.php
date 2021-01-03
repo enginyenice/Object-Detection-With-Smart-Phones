@@ -14,7 +14,6 @@ if(isset($_FILES['photo'])){
    $uniq = uniqid(); // Uniq numara
    $dizin = "normalImages/"   ;
    $dizinyolu = __DIR__."/".$dizin; // Klasör yolu
-//TODO: / işareti eksik!!!
    
     $name = $uniq.basename($_FILES['photo']['name']); // Resim ismi
     $yuklenecek_dosya = $dizinyolu .$name; // Yüklenecek dosyanın tam yolu

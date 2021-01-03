@@ -1,0 +1,767 @@
+/*******************************************
+		React-App
+*******************************************/
+/*******************************************
+		App.js
+*******************************************/
+import React, { useState } from "react";
+import { StyleSheet, Text, StatusBar, View } from "react-native";
+import Home from "./Screen/Home";
+import ObjectDetection from "./Screen/ObjectDetection";
+import Gallery from "./Screen/Gallery";
+
+const App = () => {
+
+  const [selectScreen, setSelectScreen] = useState("home");
+
+
+
+  let screen = <Text>Default</Text>;
+  function changeScreen(params) {
+    setSelectScreen(params);
+  }
+
+  if (selectScreen == "home")
+    screen = (
+      <Home
+        data={{
+          selectScreen: selectScreen,
+          changeScreen: changeScreen.bind(this),
+        }}
+      />
+    );
+ else if (selectScreen == "object")
+    screen = (
+      <ObjectDetection
+        data={{
+          selectScreen: selectScreen,
+          changeScreen: changeScreen.bind(this),
+        }}
+      />
+    );
+  else if (selectScreen == "gallery")
+    screen = (
+      <Gallery
+        data={{
+          selectScreen: selectScreen,
+          changeScreen: changeScreen.bind(this),
+        }}
+      />
+    );
+
+  return <View style={styles.screen}>{screen}</View>;
+};
+
+export default App;
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    width: "100%",
+  },
+});
+/*******************************************
+		Screen/Gallery.js
+*******************************************/
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  Modal,
+  Button,
+  Text,
+  TouchableHighlight,
+  View,
+  ScrollView,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
+const Separator = () => <View style={styles.separator} />;
+const home = (props) => {
+  const [galleryList, setGalleryList] = useState(null);
+  const [selectedDefaultPath, setSelectedDefaultPath] = useState(null);
+  const [selectedDetectedPath, setSelectedDetectedPath] = useState(null);
+  const [selectedDetail, setSelectedDetail] = useState(null);
+  const [galleryModalStatus, setGalleryModalStatus] = useState(false);
+  const [showDetail, setShowDetail] = useState(false);
+
+  const FetchUrl =
+    'https://php-react-database-default-rtdb.firebaseio.com/Images.json';
+  function fetchGallery() {
+    if (galleryList == null) {
+      fetch(FetchUrl)
+        .then((res) => res.json())
+        .then((res) => {
+          setGalleryList(res);
+        })
+        .catch((e) => console.log(e))
+        .done();
+    }
+  }
+
+  function closeModal() {
+    setGalleryModalStatus(false);
+  }
+  function openModel(data) {
+    setSelectedDefaultPath(data['normal_path']);
+    setSelectedDetectedPath(data['detected_path']);
+    setSelectedDetail(data['details']);
+    setGalleryModalStatus(true);
+  }
+
+  function CreateGallery() {
+    const items = [];
+    for (let index in galleryList) {
+      items.push(
+        <TouchableHighlight
+          key={index}
+          onPress={() => openModel(galleryList[index])}>
+          <Image
+            key={index}
+            style={styles.galleryImage}
+            source={{
+              uri: galleryList[index]['detected_path'],
+            }}
+          />
+        </TouchableHighlight>,
+      );
+    }
+    return <View style={styles.scroll}>
+      <Text style={{width:"100%", fontSize:25,fontStyle:"italic"}}>Tespit Edilen Resimler</Text>
+      {items}
+      </View>;
+  }
+
+  function TitleList() {
+    const listItems = selectedDetail.map((detail, key) => (
+      <Text
+        key={key}
+        style={{
+          fontSize: 25,
+          color:
+            'rgb(' + detail.red + ',' + detail.green + ',' + detail.blue + ')',
+        }}>
+        {' '}
+        {key + 1} - {detail.title}
+      </Text>
+    ));
+    return (
+      <View style={styles.TextListView}>
+        <Text style={styles.ListTitle}>TESPİT EDİLENLER</Text>
+        {listItems}
+        <Text style={styles.ListTitle}>
+          {selectedDetail.length} nesne tespit edildi.
+        </Text>
+      </View>
+    );
+  }
+
+  function ShowDetectedImage(props) {
+    let ShowSelectedImage = [
+      {
+        url: selectedDetectedPath,
+      },
+      {
+        url: selectedDefaultPath,
+      },
+    ];
+    return (
+      <Modal animationType="fade" transparent={true} visible={true}>
+        <ImageViewer
+          backgroundColor="#fff"
+          saveToLocalByLongPress={false}
+          imageUrls={ShowSelectedImage}
+        />
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.selectedImageButtonSuccess}
+            onPress={closeModal}>
+            <Text style={styles.selectedImageText}>Galeriye Dön</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.selectedImageButtonInfo}
+            onPress={() => setShowDetail(true)}>
+            <Text style={styles.selectedImageText}>Resim Detayları</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    );
+  }
+
+  fetchGallery();
+
+  return (
+    <>
+      <Separator />
+      <Button
+        color="#009e49"
+        title="Anasayfa"
+        onPress={() => {
+          props.data.changeScreen('home');
+        }}></Button>
+      <Separator />
+      <ScrollView>
+        {galleryList && <CreateGallery />}
+
+        {galleryModalStatus == true && <ShowDetectedImage />}
+
+        {showDetail == true && (
+          <Modal animationType="slide" transparent={false} visible={true}>
+            <TitleList />
+            <View style={styles.buttonContainer}>
+
+
+              
+        <TouchableOpacity
+            style={styles.selectedImageDetailButtonInfo}
+            onPress={() => setShowDetail(false)}>
+            <Text style={styles.selectedImageDetailImageText}>Geri Dön</Text>
+          </TouchableOpacity>
+
+
+
+            </View>
+          </Modal>
+        )}
+      </ScrollView>
+    </>
+  );
+};
+
+export default home;
+const styles = StyleSheet.create({
+  scroll: {flex: 1, flexDirection: 'row', flexWrap: 'wrap', flexGrow: 0},
+  galleryImage: {
+    flexBasis: '33%',
+    margin: 0.5,
+    height: 100,
+    width: 100,
+    backgroundColor: 'powderblue',
+  },
+
+  TextListView: {
+    textAlign: 'center',
+  },
+  ListTitle: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 40,
+    textDecorationLine: 'underline',
+    color: 'red',
+  },
+  separator: {
+    marginVertical: 12,
+    borderBottomColor: 'white',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  },
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    height: 50,
+    backgroundColor: '#6c757d',
+    alignItems: 'baseline',
+  },
+  selectedImageButtonInfo: {
+    
+    width: '50%',
+    height: 50,
+    backgroundColor: '#0d6efd',
+    alignItems: 'center',
+  },
+  selectedImageText: {
+    marginTop: "5%",
+    color: 'white',
+    fontSize: 23,
+  },
+  selectedImageButtonSuccess: {
+    width: '50%',
+    height: 50,
+    backgroundColor: '#009e49',
+    alignItems: 'center',
+  },
+  selectedImageDetailButtonInfo: {
+    width: '100%',
+    height: 50,
+    backgroundColor: '#009e49',
+    alignItems: 'center',
+  },
+  selectedImageDetailImageText: {
+    marginTop: "2%",
+    color: 'white',
+    fontSize: 23,
+  },
+});
+
+/*******************************************
+		Screen/Home.js
+*******************************************/
+import React from 'react'
+import { StyleSheet,Button, Text, View,Image } from 'react-native'
+
+
+
+const Separator = () => (
+    <View style={styles.separator} />
+  );
+
+const home = (props) => {
+    
+    return (
+        <View style={styles.homeView}>
+            <Image
+
+            source= {{
+                uri: "http://bhi.kocaeli.edu.tr/amblem/logorgb.png"
+            }}
+            style= {{
+                alignSelf:"center",
+                height:300,
+                width:300
+            }}
+            /> 
+            <Separator />
+            <Text style={styles.welcomeApp}> Kocaeli Üniversitesi</Text>
+            <Text style={styles.welcomeApp}>Yazılım Laboratuvarı 1</Text>
+            <Text style={styles.welcomeApp}>Proje 3</Text>
+            <Text style={styles.welcomeApp}>Engin Yenice</Text>
+            <Separator />
+            <Button
+            title="Resim Gönder"
+            color="#009e49"
+            onPress={() => {props.data.changeScreen("object")}}
+            ></Button>
+            <Separator />
+            <Button
+            title="Tespit Edilen Resimler"
+            color="#009e49"
+            onPress={() => {props.data.changeScreen("gallery")}}
+            ></Button>
+        </View>
+    )
+}
+
+export default home
+const styles = StyleSheet.create({ 
+    welcomeApp: {
+        color:"black",
+        fontWeight:"bold",
+        fontSize: 25,
+        textAlign:"center",
+        
+        //#009e49
+    },
+    homeView: {
+        marginTop: "15%",
+    },
+    separator: {
+        marginVertical: 12,
+        borderBottomColor: "white",
+        borderBottomWidth: StyleSheet.hairlineWidth,
+      },
+ });
+
+/*******************************************
+		Screen/ObjectDetection.js
+*******************************************/
+import React, {useState, useEffect, Component} from 'react';
+import {
+  StyleSheet,
+  Modal,
+  StatusBar,
+  ScrollView,
+  Button,
+  View,
+  Text,
+} from 'react-native';
+import ImageViewer from 'react-native-image-zoom-viewer';
+import * as ImagePicker from 'react-native-image-picker';
+
+const ObjectDetection = (props) => {
+  const [image, setImage] = useState(null);
+  const [resultImage, setResultImage] = useState(null);
+  const [resultDetails, setResultDetails] = useState(null);
+  const [detailStatus, setDetailStatus] = useState(false);
+  const [upload, setUpload] = useState(false);
+  const [status, setStatus] = useState(false);
+  const FetchUrl = 'http://34.123.97.64/index.php';
+  //const FetchUrl = 'http://yazlab.enginyenice.com/index.php';
+
+  const [showImage, setShowImage] = useState(null);
+  let pickImage = async () => {
+    setImage(null);
+    setResultDetails(null);
+    setResultDetails(null);
+
+    ImagePicker.launchImageLibrary(
+      {
+        mediaType: 'photo',
+      },
+      (response) => {
+        if (!response.cancelled && response['didCancel'] != true) {
+          setImage(response.uri);
+          uploadImages(response);
+        }
+      },
+    );
+  };
+  let pickCamera = async () => {
+    setImage(null);
+    setResultDetails(null);
+    setResultDetails(null);
+
+    ImagePicker.launchCamera({mediaType: 'photo'}, (response) => {
+      if (response.error) {
+        console.log('LaunchCamera Error: ', response.error);
+      }
+      if (!response.cancelled && response['didCancel'] != true) {
+        setImage(response.uri);
+        uploadImages(response);
+      }
+    });
+  };
+  let uploadImages = async (result) => {
+    setUpload(true);
+    let res = result['uri'].split('.');
+    let type = res[res.length - 1]; // image.  jpg
+
+    let path;
+    let details;
+    let body = new FormData();
+    body.append('photo', {
+      uri: result.uri,
+      name: 'photo.' + type,
+      filename: 'photo.' + type,
+      type: 'image/' + type,
+    });
+
+    body.append('Content-Type', 'image/' + type);
+    fetch(FetchUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        otherHeader: 'foo',
+      },
+      body: body,
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        for (let index in res) {
+          setResultImage(res[index]['detected_path']);
+          setResultDetails(res[index]['details']);
+          setStatus('result');
+          setShowImage([
+            {url: res[index]['detected_path']},
+            {url: res[index]['normal_path']},
+          ]);
+        }
+      })
+      .catch((e) => console.log(e))
+      .done(() => {
+        setUpload(false);
+      });
+  };
+
+  function updateScreen() {
+    props.data.changeScreen('home');
+  }
+  function TitleList() {
+    const listItems = resultDetails.map((detail, key) => (
+      <Text
+        key={key}
+        style={{
+          fontSize: 25,
+          color:
+            'rgb(' + detail.red + ',' + detail.green + ',' + detail.blue + ')',
+        }}>
+        {' '}
+        {key + 1} - {detail.title}
+      </Text>
+    ));
+    return (
+      <View style={styles.TextListView}>
+        <Text style={styles.ListTitle}>TESPİT EDİLENLER</Text>
+        {listItems}
+        <Text style={styles.ListTitle}>
+          {resultDetails.length} nesne tespit edildi.
+        </Text>
+      </View>
+    );
+  }
+  function GetImages() {
+    const images = showImage;
+    return (
+      <ImageViewer
+        backgroundColor="#fff"
+        saveToLocalByLongPress={false}
+        style={styles.picture}
+        imageUrls={images}
+      />
+    );
+  }
+  return (
+    <View style={styles.screen}>
+      {showImage != null && (
+        <>
+          <Modal
+            animationType="fade"
+            transparent={false}
+            visible={detailStatus}>
+            <ScrollView>
+              <TitleList />
+              <View style={styles.buttonContainer}>
+                <Button
+                  title="Resime Geri Dön"
+                  onPress={() => setDetailStatus(false)}
+                />
+              </View>
+            </ScrollView>
+          </Modal>
+          <ImageViewer
+            backgroundColor="#fff"
+            saveToLocalByLongPress={false}
+            style={styles.picture}
+            imageUrls={showImage}
+          />
+        </>
+      )}
+
+      {upload == true && (
+        <View>
+          <Text style={styles.controlText}>
+            Resim Çözümleniyor. Lütfen Bekleyiniz...
+          </Text>
+          <Text style={styles.controlTextTwo}>
+            (Sonuçlar internet hızınıza göre değişkenlik gösterebilir.)
+          </Text>
+        </View>
+      )}
+      <View style={styles.buttonContainer}>
+        <Button color="#009e49" onPress={updateScreen} title="Anasayfa" />
+        <Button color="#dc3545" onPress={pickCamera} title="Kamera"></Button>
+        <Button color="#0d6efd" onPress={pickImage} title="Galeri"></Button>
+        {resultDetails && (
+          <Button
+            onPress={() => setDetailStatus(true)}
+            title="Resim Detayları"></Button>
+        )}
+      </View>
+    </View>
+  );
+};
+
+export default ObjectDetection;
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    width: '100%',
+    marginTop: StatusBar.currentHeight,
+  },
+  pictureView: {
+    flex: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  picture: {},
+  buttonContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    paddingBottom: 25,
+    justifyContent: 'space-evenly',
+  },
+  TextListView: {
+    textAlign: 'center',
+  },
+  ListTitle: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 40,
+    textDecorationLine: 'underline',
+    color: 'red',
+  },
+  controlText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'red',
+  },
+  controlTextTwo: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'black',
+  },
+});
+/*******************************************
+		PHP-API
+*******************************************/
+/*******************************************
+		index.php
+*******************************************/
+<?php
+
+require_once('./application.php');
+require_once('./db.php');
+//header("Content-type: application/json");
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+$app = new application;
+$db = new db;
+
+
+
+if(isset($_FILES['photo'])){
+   $uniq = uniqid(); // Uniq numara
+   $dizin = "normalImages/"   ;
+   $dizinyolu = __DIR__."/".$dizin; // Klasör yolu
+//TODO: / işareti eksik!!!
+   
+    $name = $uniq.basename($_FILES['photo']['name']); // Resim ismi
+    $yuklenecek_dosya = $dizinyolu .$name; // Yüklenecek dosyanın tam yolu
+
+
+    move_uploaded_file($_FILES['photo']['tmp_name'], $yuklenecek_dosya); // Dosya yüklenir.
+    $imagePath = $app->GetBaseUrl().$dizin.$name; // Dosya Yolu
+    
+
+    $type = explode('/',$_FILES['photo']['type']); // fullType image/png
+    $type = strtolower($type[1]); // png
+    $result = $app->ObjectDetection($imagePath,$yuklenecek_dosya,$type); 
+
+
+    $result = $db->FirebaseAdd($result,$imagePath);
+
+    echo $result;
+
+} else {
+    $result = Array();
+    array_push($result,[
+        "status"=> 200,
+        "url"=>$app->GetBaseUrl(),
+        "title"=>"YAZILIM LABORATUVARI 1 - PROJE 3 NESNE TESPITI API",
+	"fullPath"=> __DIR__."/"."normalImages"
+    ]);
+    echo json_encode($result);
+}
+?>
+/*******************************************
+		storage.php
+*******************************************/
+<?php
+require __DIR__ . '/vendor/autoload.php';
+
+use Kreait\Firebase\Factory;
+
+class UpdateStorage
+{
+    private  $factory;
+    private  $storage;
+    public function __construct()
+    {
+        $this->factory = (new Factory)->withServiceAccount(__DIR__.'/secret/firebase-key.json');
+        $this->storage = $this->factory->createStorage();
+    }
+    public function UploadImage($ImagePath){
+
+       
+        $arrayPath = explode('/', $ImagePath);
+        $directory =  $arrayPath[count($arrayPath) - 2];
+        $imageName =  $arrayPath[count($arrayPath) - 1];
+        
+        $uploadPath = $directory."/".$imageName;
+        $imageFile = file_get_contents($ImagePath);
+        $uploadedObject = $this->storage
+            ->getBucket()
+            ->upload($imageFile, [
+                'name' => $uploadPath
+            ]);
+        
+        $expiresAt = new \DateTime('tomorrow');  
+        $createImageUrl = $uploadedObject->signedUrl($expiresAt).PHP_EOL;
+        
+       return $createImageUrl;
+
+    }
+}
+/*******************************************
+		db.php
+*******************************************/
+<?php
+// https://php-react-database-default-rtdb.firebaseio.com/Images.json
+require 'storage.php';
+class db  
+{
+   public function FirebaseAdd($data,$imagePath){
+        
+
+        $storage = new UpdateStorage();
+        $data = json_decode($data);
+
+
+
+        $details = Array();
+        foreach($data[0]->detail as $detail){
+            array_push($details,Array(
+                "title" => $detail->title,
+                "red"   => $detail->red,
+                "green"   => $detail->green,
+                "blue"   => $detail->blue,
+                ));
+        }
+        
+        $result = Array(
+            "detected_path"      =>$storage->UploadImage($data[0]->path),
+            "normal_path"        =>$storage->UploadImage($imagePath),
+            "details"   => $details
+        );
+        
+        $normalPath   = explode('/', $data[0]->path);
+        $detectedPath = explode('/', $imagePath);
+
+        $fullNormalPath = __DIR__."/".$normalPath[count($normalPath) - 2]."/".$normalPath[count($normalPath) - 1];
+        $fullDetectedPath = __DIR__."/".$detectedPath[count($detectedPath) - 2]."/".$detectedPath[count($detectedPath) - 1];
+        unlink($fullNormalPath);
+        unlink($fullDetectedPath);
+
+
+
+        
+        $returnData = Array(
+             uniqid()  =>$result,
+        );
+        
+        $data = json_encode($returnData);
+           
+           
+           
+      $curl = curl_init();
+      curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://php-react-database-default-rtdb.firebaseio.com/Images.json",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "PATCH",
+          CURLOPT_POSTFIELDS => $data,
+          CURLOPT_HTTPHEADER => array(
+              "Cache-Control: no-cache",
+              "Content-Type: application/json",
+              "Postman-Token: 99d8fc6b-d20e-43a0-93e6-5e04350ff449"
+          ),
+      ));
+      $response = curl_exec($curl);
+      curl_close($curl);
+
+
+
+
+/*
+"detected_path"      =>$storage->UploadImage($data[0]->path),
+            "normal_path"        =>$storage->UploadImage($imagePath),
+            */
+
+     
+      return $data;
+  }
+}

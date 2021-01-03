@@ -3,6 +3,13 @@
 require 'storage.php';
 class db  
 {
+    private  $firebaseDatabasePath;
+    public function __construct()
+    {
+        // Firebase Database adresi
+        $this->firebaseDatabasePath = "https://php-react-database-default-rtdb.firebaseio.com/Images.json";
+        
+    }
    public function FirebaseAdd($data,$imagePath){
         
 
@@ -48,7 +55,7 @@ class db
            
       $curl = curl_init();
       curl_setopt_array($curl, array(
-          CURLOPT_URL => "https://php-react-database-default-rtdb.firebaseio.com/Images.json",
+          CURLOPT_URL => $this->firebaseDatabasePath,
           CURLOPT_RETURNTRANSFER => true,
           CURLOPT_ENCODING => "",
           CURLOPT_MAXREDIRS => 10,
