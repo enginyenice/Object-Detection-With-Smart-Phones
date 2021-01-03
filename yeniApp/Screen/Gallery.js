@@ -90,10 +90,10 @@ const home = (props) => {
     ));
     return (
       <View style={styles.TextListView}>
-        <Text style={styles.ListTitle}>OBJECT LIST</Text>
+        <Text style={styles.ListTitle}>TESPİT EDİLENLER</Text>
         {listItems}
         <Text style={styles.ListTitle}>
-          {selectedDetail.length} objects detected.
+          {selectedDetail.length} nesne tespit edildi.
         </Text>
       </View>
     );

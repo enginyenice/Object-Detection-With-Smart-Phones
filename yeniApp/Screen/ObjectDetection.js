@@ -130,10 +130,10 @@ const ObjectDetection = (props) => {
     ));
     return (
       <View style={styles.TextListView}>
-        <Text style={styles.ListTitle}>OBJECT LIST</Text>
+        <Text style={styles.ListTitle}>TESPİT EDİLENLER</Text>
         {listItems}
         <Text style={styles.ListTitle}>
-          {resultDetails.length} objects detected.
+          {resultDetails.length} nesne tespit edildi.
         </Text>
       </View>
     );
