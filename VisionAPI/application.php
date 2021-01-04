@@ -15,8 +15,8 @@ class Application
 
         $this->ImagePath = $ImagePath;
         $vision = new VisionClient(['keyFile' => json_decode(file_get_contents(__DIR__."/secret/key.json"),true)]);
-        $dog = fopen($ImageHostPath,'r');
-        $img = $vision->image($dog,['OBJECT_LOCALIZATION']);
+        $pictureToBeDetected = fopen($ImageHostPath,'r'); // Tespit edilecek resim
+        $img = $vision->image($pictureToBeDetected,['OBJECT_LOCALIZATION']);
         $objects = $vision->annotate($img);
         $info = $objects->info();
         $objectsDetail = $info['localizedObjectAnnotations'];
