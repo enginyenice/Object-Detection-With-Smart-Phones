@@ -26,7 +26,7 @@
 | 190201133-Rapor.pdf   : Projenin raporu											|
 | 190201133-Kaba-Kod.pdf: Proje içerisinde yazıların kodların kaba kod çıktıları						|
 | 190201133-Proje.zip	: Proje dosyalarının bulunduğu zip dosyası								|
-| 190201133.txt 	: Projenin tüm kodlarının kopyalandığı metin belgesi						|	
+| 190201133.txt 	: Projenin tüm kodlarının kopyalandığı metin belgesi							|	
 | readme.txt	    	: Projenin nasıl çalıştırılacağı ve önemli notların bulunduğu metin belgesi				|
 |_______________________________________________________________________________________________________________________________|
 
